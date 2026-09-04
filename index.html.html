@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -167,6 +167,12 @@
                         <!-- Quizzes injected by JS -->
                     </div>
                 </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800">
+                    <button onclick="switchView('classroom')" class="px-4 py-2 bg-slate-800 text-xs text-slate-300 rounded-xl border border-slate-700 hover:bg-slate-700 transition">
+                        ← Back to Main Dashboard
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -218,7 +224,7 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        // TEACHER PIN CODE FOR SECURITY (UPDATED DEFAULT: 6441)
+        // TEACHER PIN CODE FOR SECURITY
         const TEACHER_PIN = "6441";
         let isAuthenticated = false;
 
@@ -507,7 +513,16 @@
             }
 
             classStudents.forEach(s => {
-                const cardUrl = `${baseUrl}?studentId=${s.id}`;
+                // Encode student object into URL parameters so it works even on external scanners
+                const encodedData = encodeURIComponent(JSON.stringify({
+                    id: s.id,
+                    name: s.name,
+                    class: s.class,
+                    points: s.points,
+                    quizzes: s.quizzes || []
+                }));
+
+                const cardUrl = `${baseUrl}?studentData=${encodedData}`;
                 const cardDiv = document.createElement('div');
                 cardDiv.className = "glass bg-slate-900 border-2 border-sky-500/50 rounded-2xl p-6 text-center space-y-3 relative";
                 
@@ -534,8 +549,8 @@
                         elem.innerHTML = '';
                         new QRCode(elem, {
                             text: cardUrl,
-                            width: 110,
-                            height: 110
+                            width: 120,
+                            height: 120
                         });
                     }
                 }, 50);
@@ -544,22 +559,42 @@
 
         function checkStudentPortal() {
             const urlParams = new URLSearchParams(window.location.search);
-            const studentId = urlParams.get('studentId');
+            const studentDataParam = urlParams.get('studentData');
+            const studentIdParam = urlParams.get('studentId');
 
-            if(studentId) {
-                const student = students.find(s => s.id === studentId);
-                if(student) {
-                    switchView('portal');
-                    document.getElementById('portalStudentName').innerText = student.name;
-                    document.getElementById('portalStudentId').innerText = `ID: ${student.id} (${student.class})`;
-                    document.getElementById('portalPoints').innerText = student.points;
-                    
-                    const classStudents = students.filter(s => s.class === student.class);
-                    const sorted = [...classStudents].sort((a,b) => b.points - a.points);
-                    const rank = sorted.findIndex(s => s.id === studentId) + 1;
-                    document.getElementById('portalRank').innerText = `#${rank}`;
+            let student = null;
 
-                    document.getElementById('portalQuizList').innerHTML = (student.quizzes || []).map(q => `
+            // First check if full data is embedded in URL
+            if (studentDataParam) {
+                try {
+                    student = JSON.parse(decodeURIComponent(studentDataParam));
+                } catch(e) {
+                    console.error("Error parsing student data from URL", e);
+                }
+            } 
+            
+            // Fallback to searching local data by ID
+            if (!student && studentIdParam) {
+                student = students.find(s => s.id === studentIdParam);
+            }
+
+            if (student) {
+                switchView('portal');
+                document.getElementById('portalStudentName').innerText = student.name || "Student";
+                document.getElementById('portalStudentId').innerText = `ID: ${student.id || 'N/A'} (${student.class || 'N/A'})`;
+                document.getElementById('portalPoints').innerText = student.points !== undefined ? student.points : 0;
+                
+                const classStudents = students.filter(s => s.class === student.class);
+                const sorted = [...classStudents].sort((a,b) => b.points - a.points);
+                const rankIndex = sorted.findIndex(s => s.id === student.id);
+                const rank = rankIndex !== -1 ? `#${rankIndex + 1}` : "#1";
+                document.getElementById('portalRank').innerText = rank;
+
+                const quizzes = student.quizzes || [];
+                if (quizzes.length === 0) {
+                    document.getElementById('portalQuizList').innerHTML = `<p class="text-xs text-slate-400">No recorded grades yet.</p>`;
+                } else {
+                    document.getElementById('portalQuizList').innerHTML = quizzes.map(q => `
                         <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
                             <span class="text-sm font-medium text-slate-300">${q.title}</span>
                             <span class="text-sm font-bold text-emerald-400">${q.score}</span>
