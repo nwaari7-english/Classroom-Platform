@@ -86,6 +86,9 @@
             <button onclick="switchView('classroom')" class="px-3 py-2 rounded-xl bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 text-xs font-semibold border border-sky-500/30 transition">
                 Classroom
             </button>
+            <button onclick="switchView('quizzes')" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold border border-amber-500/30 transition">
+                📝 Quiz Grades
+            </button>
             <button onclick="switchView('export')" class="px-3 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-semibold border border-indigo-500/30 transition">
                 🖨️ QR Cards
             </button>
@@ -121,7 +124,23 @@
             </div>
         </section>
 
-        <!-- VIEW 2: INDIVIDUAL PRIVATE STUDENT PORTAL -->
+        <!-- VIEW 2: QUIZ GRADES MANAGEMENT (SEPARATE PRIVATE VIEW) -->
+        <section id="quizzesView" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">📝 Quiz Grades Management</h2>
+                        <p class="text-xs text-slate-400">Add or update quiz results for students in <span id="quizClassTitle" class="text-sky-400 font-bold"></span>.</p>
+                    </div>
+                </div>
+
+                <div id="quizManagementList" class="space-y-4">
+                    <!-- Quiz Input Rows Injected Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: INDIVIDUAL PRIVATE STUDENT PORTAL -->
         <section id="studentPortalView" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="glass rounded-2xl p-6 text-center border border-slate-800 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-sky-400 to-indigo-500"></div>
@@ -143,7 +162,7 @@
 
                 <!-- QUIZ SCORES BREAKDOWN -->
                 <div class="text-left space-y-3">
-                    <h3 class="text-sm font-semibold text-slate-300">Recent Quiz Performance</h3>
+                    <h3 class="text-sm font-semibold text-slate-300">Quiz Grades & Assessments</h3>
                     <div id="portalQuizList" class="space-y-2">
                         <!-- Quizzes injected by JS -->
                     </div>
@@ -151,12 +170,12 @@
             </div>
         </section>
 
-        <!-- VIEW 3: EXPORT QR CARDS -->
+        <!-- VIEW 4: EXPORT QR CARDS -->
         <section id="exportView" class="hidden space-y-6">
             <div class="flex justify-between items-center no-print">
                 <div>
-                    <h2 class="text-xl font-bold text-white">Printable QR Cards</h2>
-                    <p class="text-sm text-slate-400">Scan cards to open private student view directly.</p>
+                    <h2 class="text-xl font-bold text-white">Printable Student QR Passes</h2>
+                    <p class="text-sm text-slate-400">Scan QR codes to open student portal with grades and achievements.</p>
                 </div>
                 <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 text-slate-900 font-bold hover:opacity-90 transition shadow-lg">
                     🖨️ Print / Save to PDF
@@ -203,8 +222,8 @@
         let currentClass = classes[0] || "Grade 10-A";
         
         let students = JSON.parse(localStorage.getItem('anwaar_students')) || [
-            { id: "STU001", name: "Ahmed Al-Busaidi", points: 45, class: "Grade 10-A", quizzes: [{title: "Quiz 1: Math", score: "9/10"}] },
-            { id: "STU002", name: "Sami Hassan", points: 38, class: "Grade 10-A", quizzes: [{title: "Quiz 1: Math", score: "8/10"}] }
+            { id: "STU001", name: "Ahmed Al-Busaidi", points: 45, class: "Grade 10-A", quizzes: [{title: "Quiz 1", score: "9/10"}] },
+            { id: "STU002", name: "Sami Hassan", points: 38, class: "Grade 10-A", quizzes: [{title: "Quiz 1", score: "8/10"}] }
         ];
 
         let audioEnabled = true;
@@ -254,12 +273,14 @@
 
             document.getElementById('activeClassTitle').innerText = currentClass || "None";
             document.getElementById('activeClassBadge').innerText = `${currentClass || "None"} Active Students`;
+            document.getElementById('quizClassTitle').innerText = currentClass || "None";
         }
 
         function changeClass(className) {
             currentClass = className;
             populateClassDropdowns();
             renderClassroom();
+            renderQuizManagement();
         }
 
         function addNewClass() {
@@ -276,7 +297,6 @@
             }
         }
 
-        // HIKMA: DELETE ENTIRE CLASS
         function deleteCurrentClass() {
             if(!currentClass) return;
             if(confirm(`Are you sure you want to delete '${currentClass}' and all its students?`)) {
@@ -289,7 +309,6 @@
             }
         }
 
-        // HIKMA: DELETE SINGLE STUDENT
         function deleteStudent(studentId) {
             const student = students.find(s => s.id === studentId);
             if(student && confirm(`Are you sure you want to delete student '${student.name}'?`)) {
@@ -306,7 +325,7 @@
             const studentClass = classSelect.value;
 
             if(name) {
-                const newId = `STU${String(students.length + 1).padStart(3, '0')}`;
+                const newId = `STU${Date.now().toString().slice(-4)}${Math.floor(Math.random()*10)}`;
                 students.push({
                     id: newId,
                     name: name,
@@ -364,7 +383,6 @@
             } else {
                 grid.innerHTML = classStudents.map(s => `
                     <div class="glass rounded-2xl p-5 flex flex-col justify-between border border-slate-800 hover:border-slate-700 transition relative group">
-                        <!-- DELETE INDIVIDUAL STUDENT BUTTON -->
                         <button onclick="deleteStudent('${s.id}')" title="Delete Student" class="absolute top-3 right-3 text-slate-500 hover:text-rose-400 p-1 transition opacity-80 group-hover:opacity-100">
                             ✕
                         </button>
@@ -390,6 +408,71 @@
             }
         }
 
+        // QUIZ GRADES MANAGEMENT RENDER
+        function renderQuizManagement() {
+            const classStudents = students.filter(s => s.class === currentClass);
+            const container = document.getElementById('quizManagementList');
+
+            if(classStudents.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-6">No students in this class to manage quiz grades.</p>`;
+                return;
+            }
+
+            container.innerHTML = classStudents.map(s => `
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-bold text-white text-base">${s.name}</h4>
+                        <p class="text-xs text-slate-400">ID: ${s.id}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <input type="text" id="qTitle-${s.id}" placeholder="Quiz Name (e.g. Quiz 1)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 w-36">
+                        <input type="text" id="qScore-${s.id}" placeholder="Score (e.g. 10/10)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 w-28">
+                        <button onclick="addStudentQuiz('${s.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-lg text-xs transition">
+                            Save Grade
+                        </button>
+                    </div>
+
+                    <div class="w-full border-t border-slate-800 pt-2 mt-2">
+                        <p class="text-[11px] text-slate-400 font-medium mb-1">Current Recorded Grades:</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${s.quizzes.map((q, idx) => `
+                                <span class="bg-slate-800 text-amber-300 text-[11px] px-2.5 py-1 rounded-md border border-slate-700 flex items-center gap-1.5">
+                                    ${q.title}: <strong>${q.score}</strong>
+                                    <button onclick="removeQuiz('${s.id}', ${idx})" class="text-rose-400 hover:text-rose-300 ml-1">✕</button>
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addStudentQuiz(studentId) {
+            const titleInput = document.getElementById(`qTitle-${studentId}`);
+            const scoreInput = document.getElementById(`qScore-${studentId}`);
+            const title = titleInput.value.trim() || "Quiz";
+            const score = scoreInput.value.trim() || "N/A";
+
+            const student = students.find(s => s.id === studentId);
+            if(student) {
+                if(!student.quizzes) student.quizzes = [];
+                student.quizzes.push({ title, score });
+                saveData();
+                renderQuizManagement();
+            }
+        }
+
+        function removeQuiz(studentId, quizIndex) {
+            const student = students.find(s => s.id === studentId);
+            if(student && student.quizzes) {
+                student.quizzes.splice(quizIndex, 1);
+                saveData();
+                renderQuizManagement();
+            }
+        }
+
+        // FIXED PERFECT MATCH QR GENERATION
         function renderQRCards() {
             const container = document.getElementById('printableArea');
             container.innerHTML = '';
@@ -397,27 +480,43 @@
 
             const classStudents = students.filter(s => s.class === currentClass);
 
+            if(classStudents.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 col-span-2 text-center py-8">No students in this class to export.</p>`;
+                return;
+            }
+
             classStudents.forEach(s => {
                 const cardUrl = `${baseUrl}?studentId=${s.id}`;
                 const cardDiv = document.createElement('div');
                 cardDiv.className = "glass bg-slate-900 border-2 border-sky-500/50 rounded-2xl p-6 text-center space-y-3 relative";
+                
+                const lastQuiz = s.quizzes && s.quizzes.length > 0 ? s.quizzes[s.quizzes.length - 1] : { title: "N/A", score: "N/A" };
+
                 cardDiv.innerHTML = `
                     <div class="text-xs font-bold text-sky-400 uppercase tracking-wider">Teacher. Anwaar Alfarsi - Student Pass</div>
                     <h3 class="text-xl font-bold text-white">${s.name}</h3>
                     <p class="text-xs text-slate-400">${s.class} | ID: ${s.id}</p>
                     <div class="flex justify-center p-3 bg-white rounded-xl w-max mx-auto shadow-inner" id="qr-${s.id}"></div>
-                    <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-3">
-                        <strong>Parents & Students:</strong> Scan QR code to view live points, badges & quiz grades privately.
+                    <div class="bg-slate-800/80 rounded-lg p-2 border border-slate-700 text-xs flex justify-around">
+                        <span class="text-slate-300">Total Points: <strong class="text-amber-400">${s.points}</strong></span>
+                        <span class="text-slate-300">Last Quiz: <strong class="text-emerald-400">${lastQuiz.score}</strong></span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-2">
+                        Scan QR code to view full report & all grades.
                     </p>
                 `;
                 container.appendChild(cardDiv);
 
                 setTimeout(() => {
-                    new QRCode(document.getElementById(`qr-${s.id}`), {
-                        text: cardUrl,
-                        width: 110,
-                        height: 110
-                    });
+                    const elem = document.getElementById(`qr-${s.id}`);
+                    if(elem) {
+                        elem.innerHTML = '';
+                        new QRCode(elem, {
+                            text: cardUrl,
+                            width: 110,
+                            height: 110
+                        });
+                    }
                 }, 50);
             });
         }
@@ -439,7 +538,7 @@
                     const rank = sorted.findIndex(s => s.id === studentId) + 1;
                     document.getElementById('portalRank').innerText = `#${rank}`;
 
-                    document.getElementById('portalQuizList').innerHTML = student.quizzes.map(q => `
+                    document.getElementById('portalQuizList').innerHTML = (student.quizzes || []).map(q => `
                         <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
                             <span class="text-sm font-medium text-slate-300">${q.title}</span>
                             <span class="text-sm font-bold text-emerald-400">${q.score}</span>
@@ -452,11 +551,15 @@
         function switchView(view) {
             document.getElementById('classroomView').classList.add('hidden');
             document.getElementById('studentPortalView').classList.add('hidden');
+            document.getElementById('quizzesView').classList.add('hidden');
             document.getElementById('exportView').classList.add('hidden');
 
             if(view === 'classroom') {
                 document.getElementById('classroomView').classList.remove('hidden');
                 renderClassroom();
+            } else if(view === 'quizzes') {
+                document.getElementById('quizzesView').classList.remove('hidden');
+                renderQuizManagement();
             } else if(view === 'export') {
                 document.getElementById('exportView').classList.remove('hidden');
                 renderQRCards();
