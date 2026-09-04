@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <!-- CLASS SELECTOR & ACTIONS -->
+        <!-- CLASS SELECTOR & ACTIONS (PROTECTED) -->
         <div class="flex items-center gap-2 flex-wrap">
             <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
                 <span class="text-xs text-slate-400 font-medium">Class:</span>
@@ -68,14 +68,14 @@
                 </select>
             </div>
 
-            <button onclick="openModal('addClassModal')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition">
-                + New Class
+            <button onclick="protectedAction(() => openModal('addClassModal'))" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition">
+                🔒 + New Class
             </button>
-            <button onclick="deleteCurrentClass()" class="px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-xs font-semibold text-rose-300 border border-rose-500/30 transition">
-                🗑️ Delete Class
+            <button onclick="protectedAction(deleteCurrentClass)" class="px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-xs font-semibold text-rose-300 border border-rose-500/30 transition">
+                🔒 🗑️ Delete Class
             </button>
-            <button onclick="openModal('addStudentModal')" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-xs font-semibold text-sky-300 border border-sky-500/30 transition">
-                + Add Student
+            <button onclick="protectedAction(() => openModal('addStudentModal'))" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-xs font-semibold text-sky-300 border border-sky-500/30 transition">
+                🔒 + Add Student
             </button>
         </div>
         
@@ -86,8 +86,8 @@
             <button onclick="switchView('classroom')" class="px-3 py-2 rounded-xl bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 text-xs font-semibold border border-sky-500/30 transition">
                 Classroom
             </button>
-            <button onclick="switchView('quizzes')" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold border border-amber-500/30 transition">
-                📝 Quiz Grades
+            <button onclick="protectedAction(() => switchView('quizzes'))" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold border border-amber-500/30 transition">
+                🔒 📝 Quiz Grades
             </button>
             <button onclick="switchView('export')" class="px-3 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-semibold border border-indigo-500/30 transition">
                 🖨️ QR Cards
@@ -124,7 +124,7 @@
             </div>
         </section>
 
-        <!-- VIEW 2: QUIZ GRADES MANAGEMENT (SEPARATE PRIVATE VIEW) -->
+        <!-- VIEW 2: QUIZ GRADES MANAGEMENT (TEACHER ONLY) -->
         <section id="quizzesView" class="hidden space-y-6 max-w-4xl mx-auto">
             <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
                 <div class="flex justify-between items-center mb-6">
@@ -218,6 +218,24 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
+        // TEACHER PIN CODE FOR SECURITY (UPDATED DEFAULT: 6441)
+        const TEACHER_PIN = "6441";
+        let isAuthenticated = false;
+
+        function protectedAction(callback) {
+            if (isAuthenticated) {
+                callback();
+                return;
+            }
+            const enteredPin = prompt("🔑 Teacher Authentication Required:\nPlease enter your password/PIN:");
+            if (enteredPin === TEACHER_PIN) {
+                isAuthenticated = true;
+                callback();
+            } else if (enteredPin !== null) {
+                alert("❌ Incorrect PIN. Access denied.");
+            }
+        }
+
         let classes = JSON.parse(localStorage.getItem('anwaar_classes')) || ["Grade 10-A", "Grade 10-B"];
         let currentClass = classes[0] || "Grade 10-A";
         
@@ -310,12 +328,14 @@
         }
 
         function deleteStudent(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if(student && confirm(`Are you sure you want to delete student '${student.name}'?`)) {
-                students = students.filter(s => s.id !== studentId);
-                saveData();
-                renderClassroom();
-            }
+            protectedAction(() => {
+                const student = students.find(s => s.id === studentId);
+                if(student && confirm(`Are you sure you want to delete student '${student.name}'?`)) {
+                    students = students.filter(s => s.id !== studentId);
+                    saveData();
+                    renderClassroom();
+                }
+            });
         }
 
         function addNewStudent() {
@@ -341,18 +361,20 @@
         }
 
         function addPoint(id, delta) {
-            const student = students.find(s => s.id === id);
-            if(student) {
-                student.points += delta;
-                saveData();
-                if(delta > 0) {
-                    playSound('add');
-                    confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
-                } else {
-                    playSound('sub');
+            protectedAction(() => {
+                const student = students.find(s => s.id === id);
+                if(student) {
+                    student.points += delta;
+                    saveData();
+                    if(delta > 0) {
+                        playSound('add');
+                        confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
+                    } else {
+                        playSound('sub');
+                    }
+                    renderClassroom();
                 }
-                renderClassroom();
-            }
+            });
         }
 
         function renderClassroom() {
@@ -436,7 +458,7 @@
                     <div class="w-full border-t border-slate-800 pt-2 mt-2">
                         <p class="text-[11px] text-slate-400 font-medium mb-1">Current Recorded Grades:</p>
                         <div class="flex flex-wrap gap-2">
-                            ${s.quizzes.map((q, idx) => `
+                            ${(s.quizzes || []).map((q, idx) => `
                                 <span class="bg-slate-800 text-amber-300 text-[11px] px-2.5 py-1 rounded-md border border-slate-700 flex items-center gap-1.5">
                                     ${q.title}: <strong>${q.score}</strong>
                                     <button onclick="removeQuiz('${s.id}', ${idx})" class="text-rose-400 hover:text-rose-300 ml-1">✕</button>
@@ -472,7 +494,6 @@
             }
         }
 
-        // FIXED PERFECT MATCH QR GENERATION
         function renderQRCards() {
             const container = document.getElementById('printableArea');
             container.innerHTML = '';
