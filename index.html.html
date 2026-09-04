@@ -1,410 +1,100 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher. Anwaar Alfarsi - Student Management System</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- QRCode.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Anwaar Al Farsi - Student Recognition Platform</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            accent: {
+              400: '#a855f7',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.8); border-radius: 4px; }
     
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            cyan: '#38bdf8',
-                            purple: '#818cf8',
-                            darkBg: '#0f172a',
-                            cardBg: 'rgba(30, 41, 59, 0.7)'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        @media print {
-            body * { visibility: hidden; }
-            #printableArea, #printableArea * { visibility: visible; }
-            #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-        }
-    </style>
+    @media print {
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-card { page-break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased custom-scrollbar flex flex-col">
 
-    <!-- NAVIGATION HEADER -->
-    <header class="glass sticky top-0 z-40 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center no-print gap-4">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center font-bold text-slate-900 text-xl shadow-lg">
-                ⚡
-            </div>
-            <div>
-                <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
-                    Teacher. Anwaar Alfarsi
-                </h1>
-                <p class="text-xs text-slate-400">Classroom Management & Analytics Dashboard</p>
-            </div>
-        </div>
+  <div id="app" class="flex-1 flex flex-col min-h-screen"></div>
 
-        <!-- CLASS SELECTOR & ACTIONS (PROTECTED) -->
-        <div class="flex items-center gap-2 flex-wrap">
-            <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-                <span class="text-xs text-slate-400 font-medium">Select Class:</span>
-                <select id="classSelector" onchange="changeClass(this.value)" class="bg-transparent text-sm font-bold text-sky-400 focus:outline-none cursor-pointer">
-                </select>
-            </div>
+  <script>
+    // ==========================================
+    // 1. STATE MANAGEMENT & DATA MODELS
+    // ==========================================
 
-            <button onclick="protectedAction(() => openModal('addClassModal'))" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition">
-                🔒 + New Class
-            </button>
-            <button onclick="protectedAction(deleteCurrentClass)" class="px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-xs font-semibold text-rose-300 border border-rose-500/30 transition">
-                🔒 🗑️ Delete Class
-            </button>
-            <button onclick="protectedAction(() => openModal('addStudentModal'))" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-xs font-semibold text-sky-300 border border-sky-500/30 transition">
-                🔒 + Add Student
-            </button>
-        </div>
-        
-        <div class="flex items-center space-x-2">
-            <button onclick="switchView('classroom')" class="px-3 py-2 rounded-xl bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 text-xs font-semibold border border-sky-500/30 transition">
-                Classroom
-            </button>
-            <button onclick="protectedAction(() => switchView('quizzes'))" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold border border-amber-500/30 transition">
-                🔒 📝 Quiz Grades
-            </button>
-            <button onclick="switchView('export')" class="px-3 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-semibold border border-indigo-500/30 transition">
-                🖨️ QR Cards
-            </button>
-        </div>
-    </header>
+    const DEFAULT_CLASSES = ["11/1", "11/8", "11/11"];
+    const TEACHER_PIN = "6441";
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
-        
-        <!-- VIEW 1: CLASSROOM DISPLAY MODE -->
-        <section id="classroomView" class="space-y-8">
-            <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
-                <h2 class="text-lg font-semibold text-slate-300 mb-4 flex items-center gap-2">
-                    🏆 Top Performers Leaderboard (<span id="activeClassTitle">No Class Selected</span>)
-                </h2>
-                <div id="leaderboardGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-            </div>
-
-            <div>
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-slate-100">Student Directory</h2>
-                    <span id="activeClassBadge" class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-full border border-slate-700"></span>
-                </div>
-                <div id="studentsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-            </div>
-        </section>
-
-        <!-- VIEW 2: QUIZ GRADES MANAGEMENT -->
-        <section id="quizzesView" class="hidden space-y-6 max-w-4xl mx-auto">
-            <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">📝 Quiz Grades Management</h2>
-                        <p class="text-xs text-slate-400">Add or edit quiz scores for students in <span id="quizClassTitle" class="text-sky-400 font-bold"></span>.</p>
-                    </div>
-                </div>
-                <div id="quizManagementList" class="space-y-4"></div>
-            </div>
-        </section>
-
-        <!-- VIEW 3: EXPORT QR CARDS -->
-        <section id="exportView" class="hidden space-y-6">
-            <div class="flex justify-between items-center no-print">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Printable Student QR Passes</h2>
-                    <p class="text-sm text-slate-400">Scan QR codes with any phone camera to display student details and grades directly.</p>
-                </div>
-                <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 text-slate-900 font-bold hover:opacity-90 transition shadow-lg">
-                    🖨️ Print / Save as PDF
-                </button>
-            </div>
-
-            <div id="printableArea" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-        </section>
-
-    </main>
-
-    <!-- MODALS -->
-    <div id="addClassModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="glass p-6 rounded-2xl w-full max-w-md border border-slate-700 space-y-4">
-            <h3 class="text-lg font-bold text-white">Add New Class</h3>
-            <input type="text" id="newClassName" placeholder="e.g. Grade 10-A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
-            <div class="flex justify-end gap-2">
-                <button onclick="closeModal('addClassModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">Cancel</button>
-                <button onclick="addNewClass()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">Create Class</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="addStudentModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="glass p-6 rounded-2xl w-full max-w-md border border-slate-700 space-y-4">
-            <h3 class="text-lg font-bold text-white">Add New Student</h3>
-            <input type="text" id="newStudentName" placeholder="Student Full Name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
-            <select id="newStudentClass" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400"></select>
-            <div class="flex justify-end gap-2">
-                <button onclick="closeModal('addStudentModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">Cancel</button>
-                <button onclick="addNewStudent()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">Add Student</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const TEACHER_PIN = "6441";
-        let isAuthenticated = false;
-
-        function protectedAction(callback) {
-            if (isAuthenticated) { callback(); return; }
-            const enteredPin = prompt("🔑 Teacher Password Required:");
-            if (enteredPin === TEACHER_PIN) {
-                isAuthenticated = true;
-                callback();
-            } else if (enteredPin !== null) {
-                alert("❌ Incorrect Password.");
-            }
-        }
-
-        let classes = JSON.parse(localStorage.getItem('anwaar_classes')) || [];
-        let currentClass = classes[0] || "";
-        let students = JSON.parse(localStorage.getItem('anwaar_students')) || [];
-
-        function saveData() {
-            localStorage.setItem('anwaar_classes', JSON.stringify(classes));
-            localStorage.setItem('anwaar_students', JSON.stringify(students));
-        }
-
-        function populateClassDropdowns() {
-            const selector = document.getElementById('classSelector');
-            if (classes.length === 0) {
-                selector.innerHTML = `<option value="">No Classes Found</option>`;
-            } else {
-                selector.innerHTML = classes.map(c => `<option value="${c}" ${c === currentClass ? 'selected' : ''}>${c}</option>`).join('');
-            }
-            
-            const studentClassSelect = document.getElementById('newStudentClass');
-            studentClassSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
-
-            document.getElementById('activeClassTitle').innerText = currentClass || "None";
-            document.getElementById('activeClassBadge').innerText = `${currentClass || "None"} - Total Students: ${students.filter(s => s.class === currentClass).length}`;
-            document.getElementById('quizClassTitle').innerText = currentClass || "None";
-        }
-
-        function changeClass(className) {
-            currentClass = className;
-            populateClassDropdowns();
-            renderClassroom();
-            renderQuizManagement();
-        }
-
-        function addNewClass() {
-            const nameInput = document.getElementById('newClassName');
-            const name = nameInput.value.trim();
-            if(name && !classes.includes(name)) {
-                classes.push(name);
-                currentClass = name;
-                saveData();
-                populateClassDropdowns();
-                renderClassroom();
-                nameInput.value = '';
-                closeModal('addClassModal');
-            }
-        }
-
-        function deleteCurrentClass() {
-            if(!currentClass) return;
-            if(confirm(`Are you sure you want to delete class '${currentClass}' and all its students?`)) {
-                classes = classes.filter(c => c !== currentClass);
-                students = students.filter(s => s.class !== currentClass);
-                currentClass = classes[0] || "";
-                saveData();
-                populateClassDropdowns();
-                renderClassroom();
-            }
-        }
-
-        function addNewStudent() {
-            const nameInput = document.getElementById('newStudentName');
-            const classSelect = document.getElementById('newStudentClass');
-            const name = nameInput.value.trim();
-            const studentClass = classSelect.value;
-
-            if(!studentClass) {
-                alert("Please create a class before adding a student.");
-                return;
-            }
-
-            if(name) {
-                const newId = `STU${Date.now().toString().slice(-4)}`;
-                students.push({ id: newId, name: name, points: 0, class: studentClass, quizzes: [] });
-                saveData();
-                renderClassroom();
-                nameInput.value = '';
-                closeModal('addStudentModal');
-            }
-        }
-
-        function addPoint(id, delta) {
-            protectedAction(() => {
-                const student = students.find(s => s.id === id);
-                if(student) {
-                    student.points += delta;
-                    saveData();
-                    renderClassroom();
-                }
-            });
-        }
-
-        function renderClassroom() {
-            const classStudents = students.filter(s => s.class === currentClass);
-            const sorted = [...classStudents].sort((a,b) => b.points - a.points);
-            
-            const lbContainer = document.getElementById('leaderboardGrid');
-            lbContainer.innerHTML = sorted.length === 0 ? `<p class="text-sm text-slate-400 col-span-3 text-center py-4">No students registered in this class yet.</p>` :
-                sorted.slice(0, 3).map((s, index) => `
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">${index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}</span>
-                            <div>
-                                <p class="font-bold text-slate-200 text-sm">${s.name}</p>
-                                <p class="text-xs text-slate-400">${s.class}</p>
-                            </div>
-                        </div>
-                        <span class="text-xl font-extrabold text-amber-400">${s.points} pts</span>
-                    </div>
-                `).join('');
-
-            const grid = document.getElementById('studentsGrid');
-            grid.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 col-span-4 text-center py-8">Create a class and add students to start.</p>` :
-                classStudents.map(s => `
-                    <div class="glass rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
-                        <div>
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="text-xs bg-slate-800 text-sky-400 px-2.5 py-1 rounded-full font-medium">${s.class}</span>
-                                <span class="text-2xl font-black text-amber-400">${s.points}</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-1">${s.name}</h3>
-                            <p class="text-xs text-slate-400 mb-4">ID: ${s.id}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="addPoint('${s.id}', 1)" class="flex-1 py-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl font-bold">+1 Point</button>
-                            <button onclick="addPoint('${s.id}', -1)" class="py-2 px-3 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl font-bold">-1</button>
-                        </div>
-                    </div>
-                `).join('');
-        }
-
-        function renderQuizManagement() {
-            const classStudents = students.filter(s => s.class === currentClass);
-            const container = document.getElementById('quizManagementList');
-            container.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 text-center py-4">No students in this class.</p>` :
-                classStudents.map(s => `
-                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <h4 class="font-bold text-white text-base">${s.name}</h4>
-                        <p class="text-xs text-slate-400">ID: ${s.id} | Recorded Quizzes: ${s.quizzes ? s.quizzes.length : 0}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="qTitle-${s.id}" placeholder="Quiz Name" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
-                        <input type="text" id="qScore-${s.id}" placeholder="Score (e.g. 10/10)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-32">
-                        <button onclick="addStudentQuiz('${s.id}')" class="px-3 py-1.5 bg-amber-500 text-slate-900 font-bold rounded-lg text-xs">Save Score</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function addStudentQuiz(studentId) {
-            const title = document.getElementById(`qTitle-${studentId}`).value.trim() || "Quiz";
-            const score = document.getElementById(`qScore-${studentId}`).value.trim() || "N/A";
-            const student = students.find(s => s.id === studentId);
-            if(student) {
-                if(!student.quizzes) student.quizzes = [];
-                student.quizzes.push({ title, score });
-                saveData();
-                renderQuizManagement();
-                alert(`Saved score for ${title} - Student: ${student.name}`);
-            }
-        }
-
-        function renderQRCards() {
-            const container = document.getElementById('printableArea');
-            container.innerHTML = '';
-            const classStudents = students.filter(s => s.class === currentClass);
-
-            if(classStudents.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 col-span-2 text-center py-8">No students available to display cards.</p>`;
-                return;
-            }
-
-            classStudents.forEach(s => {
-                let quizzesText = "No quizzes recorded yet";
-                if(s.quizzes && s.quizzes.length > 0) {
-                    quizzesText = s.quizzes.map(q => `${q.title}: ${q.score}`).join(' | ');
-                }
-
-                const qrTextData = `🎓 Student Pass - Teacher. Anwaar Alfarsi\n------------------------\n👤 Name: ${s.name}\n📚 Class: ${s.class}\n🆔 ID: ${s.id}\n⭐ Points: ${s.points}\n📝 Grades: ${quizzesText}`;
-
-                const cardDiv = document.createElement('div');
-                cardDiv.className = "glass bg-slate-900 border-2 border-sky-500/50 rounded-2xl p-6 text-center space-y-3";
-                cardDiv.innerHTML = `
-                    <div class="text-xs font-bold text-sky-400 uppercase">Teacher. Anwaar Alfarsi - Student Pass</div>
-                    <h3 class="text-xl font-bold text-white">${s.name}</h3>
-                    <p class="text-xs text-slate-400">${s.class} | ID: ${s.id}</p>
-                    <div class="flex justify-center p-3 bg-white rounded-xl w-max mx-auto" id="qr-${s.id}"></div>
-                    <p class="text-[11px] text-slate-400">Scan QR code with phone camera to view student info & grades instantly</p>
-                `;
-                container.appendChild(cardDiv);
-
-                setTimeout(() => {
-                    const elem = document.getElementById(`qr-${s.id}`);
-                    if(elem) {
-                        elem.innerHTML = '';
-                        new QRCode(elem, {
-                            text: qrTextData,
-                            width: 140,
-                            height: 140
-                        });
-                    }
-                }, 50);
-            });
-        }
-
-        function switchView(view) {
-            document.getElementById('classroomView').classList.add('hidden');
-            document.getElementById('quizzesView').classList.add('hidden');
-            document.getElementById('exportView').classList.add('hidden');
-
-            if(view === 'classroom') document.getElementById('classroomView').classList.remove('hidden');
-            if(view === 'quizzes') document.getElementById('quizzesView').classList.remove('hidden');
-            if(view === 'export') {
-                document.getElementById('exportView').classList.remove('hidden');
-                renderQRCards();
-            }
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        window.onload = function() {
-            populateClassDropdowns();
-            renderClassroom();
-        };
-    </script>
-</body>
-</html>
+    const InitialState = {
+      currentUser: { role: 'teacher', authenticated: true },
+      settings: {
+        platformName: "Teacher Anwaar Al Farsi",
+        subtitle: "Student Recognition & Gamification Platform",
+        teacherName: "Teacher Anwaar Al Farsi",
+        schoolName: "High School Academy",
+        academicYear: "2026-2027",
+        soundEnabled: true,
+        volume: 0.5,
+        levels: [
+          { name: "Bronze", min: 0, max: 49, icon: "🥉", color: "text-amber-600" },
+          { name: "Silver", min: 50, max: 99, icon: "🥈", color: "text-slate-300" },
+          { name: "Gold", min: 100, max: 199, icon: "🥇", color: "text-yellow-400" },
+          { name: "Platinum", min: 200, max: 9999, icon: "🏆", color: "text-cyan-400" }
+        ],
+        badges: [
+          { id: "b1", name: "Participation Champion", description: "Earned 50+ participation points", icon: "⚡" },
+          { id: "b2", name: "Consistency Star", description: "Consistent positive performance", icon: "🌟" },
+          { id: "b3", name: "Team Player", description: "Contributed actively to group success", icon: "🤝" },
+          { id: "b4", name: "Quiz Master", description: "Scored 90%+ average in quizzes", icon: "🧠" }
+        ],
+        portalConfig: {
+          showPoints: true
