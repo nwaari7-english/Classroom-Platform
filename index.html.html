@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أ. أنوار الفارسي - إدارة الصفوف والدرجات</title>
+    <title>Teacher. Anwaar Alfarsi - Student Management System</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- QRCode.js -->
@@ -47,46 +47,46 @@
 
     <!-- NAVIGATION HEADER -->
     <header class="glass sticky top-0 z-40 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center no-print gap-4">
-        <div class="flex items-center space-x-3 space-x-reverse">
+        <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center font-bold text-slate-900 text-xl shadow-lg">
                 ⚡
             </div>
             <div>
                 <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
-                    أ. أنوار الفارسي
+                    Teacher. Anwaar Alfarsi
                 </h1>
-                <p class="text-xs text-slate-400">لوحة إدارة الصفوف والأنشطة الطلابية</p>
+                <p class="text-xs text-slate-400">Classroom Management & Analytics Dashboard</p>
             </div>
         </div>
 
         <!-- CLASS SELECTOR & ACTIONS (PROTECTED) -->
         <div class="flex items-center gap-2 flex-wrap">
             <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-                <span class="text-xs text-slate-400 font-medium">الصف المحدد:</span>
+                <span class="text-xs text-slate-400 font-medium">Select Class:</span>
                 <select id="classSelector" onchange="changeClass(this.value)" class="bg-transparent text-sm font-bold text-sky-400 focus:outline-none cursor-pointer">
                 </select>
             </div>
 
             <button onclick="protectedAction(() => openModal('addClassModal'))" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition">
-                🔒 + إضافة صف جديد
+                🔒 + New Class
             </button>
             <button onclick="protectedAction(deleteCurrentClass)" class="px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-xs font-semibold text-rose-300 border border-rose-500/30 transition">
-                🔒 🗑️ حذف الصف
+                🔒 🗑️ Delete Class
             </button>
             <button onclick="protectedAction(() => openModal('addStudentModal'))" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-xs font-semibold text-sky-300 border border-sky-500/30 transition">
-                🔒 + إضافة طالب
+                🔒 + Add Student
             </button>
         </div>
         
-        <div class="flex items-center space-x-2 space-x-reverse">
+        <div class="flex items-center space-x-2">
             <button onclick="switchView('classroom')" class="px-3 py-2 rounded-xl bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 text-xs font-semibold border border-sky-500/30 transition">
-                عرض الصفوف
+                Classroom
             </button>
             <button onclick="protectedAction(() => switchView('quizzes'))" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold border border-amber-500/30 transition">
-                🔒 📝 درجات الاختبارات
+                🔒 📝 Quiz Grades
             </button>
             <button onclick="switchView('export')" class="px-3 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-semibold border border-indigo-500/30 transition">
-                🖨️ بطاقات الـ QR
+                🖨️ QR Cards
             </button>
         </div>
     </header>
@@ -98,14 +98,14 @@
         <section id="classroomView" class="space-y-8">
             <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
                 <h2 class="text-lg font-semibold text-slate-300 mb-4 flex items-center gap-2">
-                    🏆 لوحة الصدارة (<span id="activeClassTitle">لا يوجد صف محدد</span>)
+                    🏆 Top Performers Leaderboard (<span id="activeClassTitle">No Class Selected</span>)
                 </h2>
                 <div id="leaderboardGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </div>
 
             <div>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-slate-100">قائمة الطلاب</h2>
+                    <h2 class="text-xl font-bold text-slate-100">Student Directory</h2>
                     <span id="activeClassBadge" class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-full border border-slate-700"></span>
                 </div>
                 <div id="studentsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
@@ -117,8 +117,8 @@
             <div class="glass rounded-2xl p-6 border border-slate-800 shadow-2xl">
                 <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">📝 إدارة درجات الاختبارات</h2>
-                        <p class="text-xs text-slate-400">إضافة أو تعديل درجات الطلاب في <span id="quizClassTitle" class="text-sky-400 font-bold"></span>.</p>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">📝 Quiz Grades Management</h2>
+                        <p class="text-xs text-slate-400">Add or edit quiz scores for students in <span id="quizClassTitle" class="text-sky-400 font-bold"></span>.</p>
                     </div>
                 </div>
                 <div id="quizManagementList" class="space-y-4"></div>
@@ -129,11 +129,11 @@
         <section id="exportView" class="hidden space-y-6">
             <div class="flex justify-between items-center no-print">
                 <div>
-                    <h2 class="text-xl font-bold text-white">بطاقات الطلاب المطبوعة (QR Passes)</h2>
-                    <p class="text-sm text-slate-400">عند مسح الكود بكاميرا أي هاتف، ستظهر بيانات الطالب ودرجاته فوراً.</p>
+                    <h2 class="text-xl font-bold text-white">Printable Student QR Passes</h2>
+                    <p class="text-sm text-slate-400">Scan QR codes with any phone camera to display student details and grades directly.</p>
                 </div>
                 <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 text-slate-900 font-bold hover:opacity-90 transition shadow-lg">
-                    🖨️ طباعة / حفظ كـ PDF
+                    🖨️ Print / Save as PDF
                 </button>
             </div>
 
@@ -145,23 +145,23 @@
     <!-- MODALS -->
     <div id="addClassModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
         <div class="glass p-6 rounded-2xl w-full max-w-md border border-slate-700 space-y-4">
-            <h3 class="text-lg font-bold text-white">إضافة صف جديد</h3>
-            <input type="text" id="newClassName" placeholder="مثال: الصف العاشر - أ" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
+            <h3 class="text-lg font-bold text-white">Add New Class</h3>
+            <input type="text" id="newClassName" placeholder="e.g. Grade 10-A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
             <div class="flex justify-end gap-2">
-                <button onclick="closeModal('addClassModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">إلغاء</button>
-                <button onclick="addNewClass()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">إنشاء الصف</button>
+                <button onclick="closeModal('addClassModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">Cancel</button>
+                <button onclick="addNewClass()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">Create Class</button>
             </div>
         </div>
     </div>
 
     <div id="addStudentModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
         <div class="glass p-6 rounded-2xl w-full max-w-md border border-slate-700 space-y-4">
-            <h3 class="text-lg font-bold text-white">إضافة طالب جديد</h3>
-            <input type="text" id="newStudentName" placeholder="اسم الطالب الثلاثي" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
+            <h3 class="text-lg font-bold text-white">Add New Student</h3>
+            <input type="text" id="newStudentName" placeholder="Student Full Name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400">
             <select id="newStudentClass" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-sky-400"></select>
             <div class="flex justify-end gap-2">
-                <button onclick="closeModal('addStudentModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">إلغاء</button>
-                <button onclick="addNewStudent()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">إضافة الطالب</button>
+                <button onclick="closeModal('addStudentModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold">Cancel</button>
+                <button onclick="addNewStudent()" class="px-4 py-2 rounded-xl bg-sky-500 text-slate-900 font-bold text-sm">Add Student</button>
             </div>
         </div>
     </div>
@@ -172,16 +172,15 @@
 
         function protectedAction(callback) {
             if (isAuthenticated) { callback(); return; }
-            const enteredPin = prompt("🔑 يلزم إدخال كلمة المرور للوصول:");
+            const enteredPin = prompt("🔑 Teacher Password Required:");
             if (enteredPin === TEACHER_PIN) {
                 isAuthenticated = true;
                 callback();
             } else if (enteredPin !== null) {
-                alert("❌ كلمة المرور غير صحيحة.");
+                alert("❌ Incorrect Password.");
             }
         }
 
-        // تفريغ كافة البيانات السابقة للبدء بحقول فارغة
         let classes = JSON.parse(localStorage.getItem('anwaar_classes')) || [];
         let currentClass = classes[0] || "";
         let students = JSON.parse(localStorage.getItem('anwaar_students')) || [];
@@ -194,7 +193,7 @@
         function populateClassDropdowns() {
             const selector = document.getElementById('classSelector');
             if (classes.length === 0) {
-                selector.innerHTML = `<option value="">لا يوجد صفوف</option>`;
+                selector.innerHTML = `<option value="">No Classes Found</option>`;
             } else {
                 selector.innerHTML = classes.map(c => `<option value="${c}" ${c === currentClass ? 'selected' : ''}>${c}</option>`).join('');
             }
@@ -202,9 +201,9 @@
             const studentClassSelect = document.getElementById('newStudentClass');
             studentClassSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
 
-            document.getElementById('activeClassTitle').innerText = currentClass || "لا يوجد";
-            document.getElementById('activeClassBadge').innerText = `${currentClass || "لا يوجد"} - عدد الطلاب: ${students.filter(s => s.class === currentClass).length}`;
-            document.getElementById('quizClassTitle').innerText = currentClass || "لا يوجد";
+            document.getElementById('activeClassTitle').innerText = currentClass || "None";
+            document.getElementById('activeClassBadge').innerText = `${currentClass || "None"} - Total Students: ${students.filter(s => s.class === currentClass).length}`;
+            document.getElementById('quizClassTitle').innerText = currentClass || "None";
         }
 
         function changeClass(className) {
@@ -230,7 +229,7 @@
 
         function deleteCurrentClass() {
             if(!currentClass) return;
-            if(confirm(`هل أنتِ متأكدة من حذف صف '${currentClass}' وكافة طلابه؟`)) {
+            if(confirm(`Are you sure you want to delete class '${currentClass}' and all its students?`)) {
                 classes = classes.filter(c => c !== currentClass);
                 students = students.filter(s => s.class !== currentClass);
                 currentClass = classes[0] || "";
@@ -247,7 +246,7 @@
             const studentClass = classSelect.value;
 
             if(!studentClass) {
-                alert("الرجاء إنشاء صف أولاً قبل إضافة الطالب.");
+                alert("Please create a class before adding a student.");
                 return;
             }
 
@@ -277,7 +276,7 @@
             const sorted = [...classStudents].sort((a,b) => b.points - a.points);
             
             const lbContainer = document.getElementById('leaderboardGrid');
-            lbContainer.innerHTML = sorted.length === 0 ? `<p class="text-sm text-slate-400 col-span-3 text-center py-4">لا يوجد طلاب مسجلون في هذا الصف حتى الآن.</p>` :
+            lbContainer.innerHTML = sorted.length === 0 ? `<p class="text-sm text-slate-400 col-span-3 text-center py-4">No students registered in this class yet.</p>` :
                 sorted.slice(0, 3).map((s, index) => `
                     <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -287,12 +286,12 @@
                                 <p class="text-xs text-slate-400">${s.class}</p>
                             </div>
                         </div>
-                        <span class="text-xl font-extrabold text-amber-400">${s.points} نقطة</span>
+                        <span class="text-xl font-extrabold text-amber-400">${s.points} pts</span>
                     </div>
                 `).join('');
 
             const grid = document.getElementById('studentsGrid');
-            grid.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 col-span-4 text-center py-8">قم بإنشاء صف وإضافة طلاب للبدء.</p>` :
+            grid.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 col-span-4 text-center py-8">Create a class and add students to start.</p>` :
                 classStudents.map(s => `
                     <div class="glass rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
                         <div>
@@ -301,10 +300,10 @@
                                 <span class="text-2xl font-black text-amber-400">${s.points}</span>
                             </div>
                             <h3 class="text-lg font-bold text-white mb-1">${s.name}</h3>
-                            <p class="text-xs text-slate-400 mb-4">الرقم: ${s.id}</p>
+                            <p class="text-xs text-slate-400 mb-4">ID: ${s.id}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="addPoint('${s.id}', 1)" class="flex-1 py-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl font-bold">+1 نقطة</button>
+                            <button onclick="addPoint('${s.id}', 1)" class="flex-1 py-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl font-bold">+1 Point</button>
                             <button onclick="addPoint('${s.id}', -1)" class="py-2 px-3 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl font-bold">-1</button>
                         </div>
                     </div>
@@ -314,32 +313,32 @@
         function renderQuizManagement() {
             const classStudents = students.filter(s => s.class === currentClass);
             const container = document.getElementById('quizManagementList');
-            container.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 text-center py-4">لا يوجد طلاب في هذا الصف.</p>` :
+            container.innerHTML = classStudents.length === 0 ? `<p class="text-sm text-slate-400 text-center py-4">No students in this class.</p>` :
                 classStudents.map(s => `
                 <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h4 class="font-bold text-white text-base">${s.name}</h4>
-                        <p class="text-xs text-slate-400">الرقم: ${s.id} | الاختبارات المسجلة: ${s.quizzes ? s.quizzes.length : 0}</p>
+                        <p class="text-xs text-slate-400">ID: ${s.id} | Recorded Quizzes: ${s.quizzes ? s.quizzes.length : 0}</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <input type="text" id="qTitle-${s.id}" placeholder="اسم الاختبار" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
-                        <input type="text" id="qScore-${s.id}" placeholder="الدرجة (مثال: 10/10)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-32">
-                        <button onclick="addStudentQuiz('${s.id}')" class="px-3 py-1.5 bg-amber-500 text-slate-900 font-bold rounded-lg text-xs">حفظ الدرجة</button>
+                        <input type="text" id="qTitle-${s.id}" placeholder="Quiz Name" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+                        <input type="text" id="qScore-${s.id}" placeholder="Score (e.g. 10/10)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-32">
+                        <button onclick="addStudentQuiz('${s.id}')" class="px-3 py-1.5 bg-amber-500 text-slate-900 font-bold rounded-lg text-xs">Save Score</button>
                     </div>
                 </div>
             `).join('');
         }
 
         function addStudentQuiz(studentId) {
-            const title = document.getElementById(`qTitle-${studentId}`).value.trim() || "اختبار";
-            const score = document.getElementById(`qScore-${studentId}`).value.trim() || "غير مدخل";
+            const title = document.getElementById(`qTitle-${studentId}`).value.trim() || "Quiz";
+            const score = document.getElementById(`qScore-${studentId}`).value.trim() || "N/A";
             const student = students.find(s => s.id === studentId);
             if(student) {
                 if(!student.quizzes) student.quizzes = [];
                 student.quizzes.push({ title, score });
                 saveData();
                 renderQuizManagement();
-                alert(`تم حفظ درجة ${title} للطالب ${student.name}`);
+                alert(`Saved score for ${title} - Student: ${student.name}`);
             }
         }
 
@@ -349,28 +348,26 @@
             const classStudents = students.filter(s => s.class === currentClass);
 
             if(classStudents.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 col-span-2 text-center py-8">لا يوجد طلاب لإظهار بطاقاتهم.</p>`;
+                container.innerHTML = `<p class="text-slate-400 col-span-2 text-center py-8">No students available to display cards.</p>`;
                 return;
             }
 
             classStudents.forEach(s => {
-                // تجميع قائمة درجات الاختبارات المكتسبة
-                let quizzesText = "لا يوجد اختبارات بعد";
+                let quizzesText = "No quizzes recorded yet";
                 if(s.quizzes && s.quizzes.length > 0) {
                     quizzesText = s.quizzes.map(q => `${q.title}: ${q.score}`).join(' | ');
                 }
 
-                // النص النهائي الصريح الذي سيظهر في الجوال فور مسح الباركود
-                const qrTextData = `🎓 بطاقة طالب - أ. أنوار الفارسي\n------------------------\n👤 الاسم: ${s.name}\n📚 الصف: ${s.class}\n🆔 الرقم التعريفي: ${s.id}\n⭐ النقاط: ${s.points}\n📝 الدرجات: ${quizzesText}`;
+                const qrTextData = `🎓 Student Pass - Teacher. Anwaar Alfarsi\n------------------------\n👤 Name: ${s.name}\n📚 Class: ${s.class}\n🆔 ID: ${s.id}\n⭐ Points: ${s.points}\n📝 Grades: ${quizzesText}`;
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = "glass bg-slate-900 border-2 border-sky-500/50 rounded-2xl p-6 text-center space-y-3";
                 cardDiv.innerHTML = `
-                    <div class="text-xs font-bold text-sky-400 uppercase">أ. أنوار الفارسي - بطاقة طالب</div>
+                    <div class="text-xs font-bold text-sky-400 uppercase">Teacher. Anwaar Alfarsi - Student Pass</div>
                     <h3 class="text-xl font-bold text-white">${s.name}</h3>
                     <p class="text-xs text-slate-400">${s.class} | ID: ${s.id}</p>
                     <div class="flex justify-center p-3 bg-white rounded-xl w-max mx-auto" id="qr-${s.id}"></div>
-                    <p class="text-[11px] text-slate-400">امسح الكود بكاميرا الهاتف لعرض الاسم والدرجات مباشرة</p>
+                    <p class="text-[11px] text-slate-400">Scan QR code with phone camera to view student info & grades instantly</p>
                 `;
                 container.appendChild(cardDiv);
 
