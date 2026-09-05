@@ -6,24 +6,37 @@
     <title>T. Anwaar Al Farsi Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS for Excel Import -->
+    <!-- SheetJS for Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- QRCode.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Canvas Confetti for Fireworks -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
-        @media print {
-            .no-print { display: none !important; }
-            .print-card { page-break-inside: avoid; }
+        .sad-anim {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            animation: popFade 1.2s forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        @keyframes popFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(50px); }
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
     <!-- Top Navigation Header -->
-    <header class="bg-indigo-700 text-white shadow-lg p-4 no-print">
+    <header class="bg-indigo-700 text-white shadow-lg p-4">
         <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-white text-indigo-700 p-2 rounded-full font-bold text-xl shadow">🎓</div>
@@ -39,288 +52,316 @@
         </div>
     </header>
 
-    <!-- Main Body Container -->
     <main class="container mx-auto p-4 md:p-6 flex-grow">
 
         <!-- ==================== 1. TEACHER DASHBOARD ==================== -->
         <div id="teacher-view" class="space-y-6">
-            
-            <!-- Excel Import & Quick Actions -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-800">📂 Bulk Student Import (Excel)</h2>
-                    <p class="text-xs text-slate-500 mb-3">Upload `.xlsx` or `.csv` with columns: <b>Name, Student ID, Class</b></p>
-                    <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                </div>
-                <div class="flex gap-3 justify-start md:justify-end">
-                    <button onclick="exportIDCards()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow hover:bg-emerald-700 transition flex items-center gap-2 text-sm">🪪 Export All ID Cards</button>
-                </div>
-            </div>
 
-            <!-- Tabs Navigation -->
-            <div class="flex border-b border-slate-200 gap-4">
-                <button onclick="switchTab('students')" id="tab-btn-students" class="pb-3 border-b-2 border-indigo-600 text-indigo-600 font-bold text-sm">Individual Students</button>
-                <button onclick="switchTab('groups')" id="tab-btn-groups" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-semibold text-sm">Classroom Groups</button>
-                <button onclick="switchTab('quizzes')" id="tab-btn-quizzes" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-semibold text-sm">Record Quiz Scores</button>
-            </div>
-
-            <!-- Tab 1: Individual Students View -->
-            <div id="tab-students" class="space-y-4">
-                <!-- Add Student Form -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap gap-3">
-                    <input type="text" id="add-name" placeholder="Student Full Name" class="p-2 border rounded-lg text-sm flex-1 min-w-[180px]">
-                    <input type="text" id="add-id" placeholder="Student ID" class="p-2 border rounded-lg text-sm flex-1 min-w-[120px]">
-                    <input type="text" id="add-class" placeholder="Class / Section" class="p-2 border rounded-lg text-sm flex-1 min-w-[120px]">
-                    <button onclick="addSingleStudent()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700">Add Student</button>
-                </div>
-
-                <!-- Students Roster Grid -->
-                <div id="students-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Dynamic Student Cards -->
-                </div>
-            </div>
-
-            <!-- Tab 2: Groups View -->
-            <div id="tab-groups" class="hidden space-y-4">
-                <div class="bg-white p-4 rounded-xl border border-slate-200 flex gap-3">
-                    <input type="text" id="group-name-input" placeholder="New Group Name (e.g., Team Alpha)" class="p-2 border rounded-lg text-sm flex-1">
-                    <button onclick="createNewGroup()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Create Group</button>
-                </div>
-                <div id="groups-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Dynamic Groups Cards -->
-                </div>
-            </div>
-
-            <!-- Tab 3: Quiz Scores View -->
-            <div id="tab-quizzes" class="hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
-                <h3 class="text-base font-bold text-slate-800">Add Quiz Scores</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <select id="quiz-student-select" class="p-2 border rounded-lg text-sm"><option value="">Select Student...</option></select>
-                    <input type="text" id="quiz-title" placeholder="Quiz Title (e.g. Unit 1 Quiz)" class="p-2 border rounded-lg text-sm">
-                    <input type="number" id="quiz-score" placeholder="Score" class="p-2 border rounded-lg text-sm">
-                </div>
-                <button onclick="recordQuizScore()" class="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-semibold">Record Score</button>
-            </div>
-
-        </div>
-
-        <!-- ==================== 2. PARENT/STUDENT PORTAL (ISOLATED) ==================== -->
-        <div id="student-view" class="hidden space-y-6">
-            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-xl text-indigo-900 text-sm">
-                🔒 <strong>Private Access Portal:</strong> Select or scan student QR code to view personal performance summary.
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 max-w-md mx-auto">
-                <label class="block text-xs font-bold text-slate-600 mb-2">Select Student Profile:</label>
-                <select id="parent-student-select" onchange="renderParentPortal()" class="w-full p-2.5 border rounded-lg text-sm">
-                    <option value="">-- Choose Profile --</option>
-                </select>
-            </div>
-
-            <!-- Private View Display -->
-            <div id="private-portal-content" class="hidden space-y-6 max-w-2xl mx-auto">
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center space-y-4">
-                    <div class="text-3xl font-bold text-indigo-600" id="portal-student-points">0 Points</div>
-                    <h2 class="text-xl font-bold text-slate-800" id="portal-student-name">-</h2>
-                    <p class="text-xs text-slate-500" id="portal-student-id">-</p>
-                    <div id="portal-qrcode" class="flex justify-center my-3"></div>
-                    <div class="border-t pt-3 text-xs text-slate-400">
-                        <b>T. Anwaar Al Farsi Platform</b><br>
-                        Recognize. Inspire. Empower.
+            <!-- Class Management Header -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <h2 class="text-lg font-bold text-slate-800">🏫 Classrooms</h2>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-class-name" placeholder="Class Name (e.g. Grade 5A)" class="p-2 border rounded-lg text-sm">
+                        <button onclick="addClass()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700">+ Add Class</button>
                     </div>
                 </div>
 
-                <!-- Quiz Results Table -->
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
-                    <h3 class="text-base font-bold text-slate-800 mb-3 border-b pb-2">📊 Personal Quiz Results</h3>
-                    <table class="w-full text-left text-sm">
-                        <thead><tr class="border-b bg-slate-50"><th class="p-2">Quiz Title</th><th class="p-2">Score</th></tr></thead>
-                        <tbody id="portal-quiz-table"></tbody>
-                    </table>
+                <!-- Class Buttons Pills -->
+                <div id="classes-list" class="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+                    <!-- Class Buttons injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Active Class Main Panel -->
+            <div id="active-class-panel" class="hidden space-y-6">
+
+                <!-- Excel Import & Quick Actions -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700" id="active-class-title">Class Details</h3>
+                        <p class="text-xs text-slate-400">Import students via Excel or add groups below.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 font-semibold">
+                        <button onclick="deleteCurrentClass()" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-200">Delete Class</button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-200 gap-4">
+                    <button onclick="switchTab('students')" id="tab-btn-students" class="pb-2 border-b-2 border-indigo-600 text-indigo-600 font-bold text-sm">Individual Students</button>
+                    <button onclick="switchTab('groups')" id="tab-btn-groups" class="pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-semibold text-sm">Classroom Groups</button>
+                </div>
+
+                <!-- Tab 1: Students Grid -->
+                <div id="tab-students" class="space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-wrap gap-2">
+                        <input type="text" id="add-student-name" placeholder="Student Full Name" class="p-2 border rounded-lg text-sm flex-1">
+                        <input type="text" id="add-student-id" placeholder="Student ID" class="p-2 border rounded-lg text-sm w-32">
+                        <button onclick="addStudent()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Add Student</button>
+                    </div>
+                    <div id="students-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
+
+                <!-- Tab 2: Groups Grid -->
+                <div id="tab-groups" class="hidden space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex gap-2">
+                        <input type="text" id="group-name-input" placeholder="New Group Name (e.g. Group Alpha)" class="p-2 border rounded-lg text-sm flex-1">
+                        <button onclick="addGroup()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Add Group</button>
+                    </div>
+                    <div id="groups-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==================== 2. PARENT/STUDENT PORTAL ==================== -->
+        <div id="student-view" class="hidden space-y-6">
+            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-xl text-indigo-900 text-sm">
+                🔒 <strong>Private Student Access:</strong> Select student profile to view private card and grades.
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 max-w-md mx-auto">
+                <select id="parent-student-select" onchange="renderParentPortal()" class="w-full p-2.5 border rounded-lg text-sm">
+                    <option value="">-- Select Student --</option>
+                </select>
+            </div>
+
+            <div id="private-portal-content" class="hidden max-w-md mx-auto bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center space-y-4">
+                <div class="text-4xl font-bold text-indigo-600" id="portal-points">0 Pts</div>
+                <h3 class="text-xl font-bold text-slate-800" id="portal-name">-</h3>
+                <p class="text-xs text-slate-400" id="portal-class">-</p>
+                <div id="portal-qrcode" class="flex justify-center py-2"></div>
+                <div class="border-t pt-3 text-xs text-slate-400">
+                    <b>T. Anwaar Al Farsi Platform</b><br>Recognize. Inspire. Empower.
                 </div>
             </div>
         </div>
 
-        <!-- Printable ID Cards Area -->
-        <div id="printable-cards-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 p-4"></div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 p-4 text-center text-xs space-y-1 no-print">
+    <footer class="bg-slate-900 text-slate-400 p-4 text-center text-xs space-y-1">
         <div class="text-slate-200 font-bold">T. Anwaar Al Farsi Platform</div>
         <div class="text-indigo-400 italic">Recognize. Inspire. Empower.</div>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- Audio Synthesizer & Effects -->
     <script>
-        // Web Audio Synthesizer for Interactive Sounds
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+
+        function playSoundEffect(type) {
             if (type === 'add') {
-                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 sound
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+                // Energetic Clapping / Chime Synthesis
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.frequency.setValueAtTime(523.25 + (i * 100), audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }, i * 50);
+                }
             } else {
-                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3 low sound
+                // Glass Break Synthesis
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
                 gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
             }
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
         }
 
-        // Data Models Persistence
-        let students = JSON.parse(localStorage.getItem('mep_anwaar_students')) || [];
-        let groups = JSON.parse(localStorage.getItem('mep_anwaar_groups')) || [];
+        function triggerVisualEffect(type) {
+            if (type === 'add') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+                const sadElem = document.createElement('div');
+                sadElem.className = 'sad-anim';
+                sadElem.innerHTML = '😢';
+                document.body.appendChild(sadElem);
+                setTimeout(() => sadElem.remove(), 1200);
+            }
+        }
+
+        // Data Storage
+        let classes = JSON.parse(localStorage.getItem('anwaar_classes')) || ['Grade 5A'];
+        let students = JSON.parse(localStorage.getItem('anwaar_students_v2')) || [];
+        let groups = JSON.parse(localStorage.getItem('anwaar_groups_v2')) || [];
+        let activeClass = classes[0] || '';
 
         function saveData() {
-            localStorage.setItem('mep_anwaar_students', JSON.stringify(students));
-            localStorage.setItem('mep_anwaar_groups', JSON.stringify(groups));
-            renderStudentsGrid();
-            renderGroupsGrid();
-            updateDropdowns();
+            localStorage.setItem('anwaar_classes', JSON.stringify(classes));
+            localStorage.setItem('anwaar_students_v2', JSON.stringify(students));
+            localStorage.setItem('anwaar_groups_v2', JSON.stringify(groups));
+            renderClassesList();
+            renderActiveClass();
+            updateParentDropdown();
         }
 
-        // Excel Import Listener
-        document.getElementById('excel-file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(sheet);
-                
-                rows.forEach(r => {
-                    const name = r.Name || r.name || r['Student Name'];
-                    const id = String(r.ID || r.id || r['Student ID'] || Math.floor(1000 + Math.random() * 9000));
-                    const className = r.Class || r.class || 'General';
-                    if (name && !students.find(s => s.id === id)) {
-                        students.push({ id, name, class: className, points: 0, group: '', quizzes: [] });
-                    }
-                });
-                saveData();
-                alert('Excel file imported successfully!');
-            };
-            reader.readAsArrayBuffer(file);
-        });
-
-        // Add Individual Student
-        function addSingleStudent() {
-            const name = document.getElementById('add-name').value.trim();
-            const id = document.getElementById('add-id').value.trim() || String(Math.floor(1000 + Math.random() * 9000));
-            const className = document.getElementById('add-class').value.trim() || 'General';
-            if(!name) return alert('Please enter student name.');
-            students.push({ id, name, class: className, points: 0, group: '', quizzes: [] });
-            document.getElementById('add-name').value = '';
-            document.getElementById('add-id').value = '';
-            document.getElementById('add-class').value = '';
+        // Class Actions
+        function addClass() {
+            const name = document.getElementById('new-class-name').value.trim();
+            if (!name || classes.includes(name)) return;
+            classes.push(name);
+            activeClass = name;
+            document.getElementById('new-class-name').value = '';
             saveData();
         }
 
-        // Change Student Points
-        function adjustPoints(studentIndex, delta) {
-            students[studentIndex].points += delta;
-            playSound(delta > 0 ? 'add' : 'deduct');
+        function deleteCurrentClass() {
+            if (!confirm(`Delete ${activeClass} and all its students?`)) return;
+            students = students.filter(s => s.class !== activeClass);
+            groups = groups.filter(g => g.class !== activeClass);
+            classes = classes.filter(c => c !== activeClass);
+            activeClass = classes[0] || '';
             saveData();
         }
 
-        // Render Students Grid
-        function renderStudentsGrid() {
-            const container = document.getElementById('students-grid');
+        function renderClassesList() {
+            const container = document.getElementById('classes-list');
             container.innerHTML = '';
-            students.forEach((s, idx) => {
+            classes.forEach(c => {
+                const isActive = c === activeClass;
                 container.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+                    <button onclick="setActiveClass('${c}')" class="px-4 py-2 rounded-xl text-sm font-bold transition ${isActive ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                        🏫 ${c}
+                    </button>
+                `;
+            });
+        }
+
+        function setActiveClass(className) {
+            activeClass = className;
+            saveData();
+        }
+
+        function renderActiveClass() {
+            const panel = document.getElementById('active-class-panel');
+            if (!activeClass) return panel.classList.add('hidden');
+            panel.classList.remove('hidden');
+            document.getElementById('active-class-title').textContent = `Classroom: ${activeClass}`;
+
+            // Render Students in active class
+            const studentContainer = document.getElementById('students-grid');
+            studentContainer.innerHTML = '';
+            const classStudents = students.filter(s => s.class === activeClass);
+
+            classStudents.forEach(s => {
+                const sIdx = students.findIndex(x => x.id === s.id);
+                studentContainer.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
                         <div class="flex justify-between items-start">
                             <div>
                                 <h4 class="font-bold text-slate-800">${s.name}</h4>
-                                <p class="text-xs text-slate-400">ID: ${s.id} | Class: ${s.class}</p>
+                                <p class="text-xs text-slate-400">ID: ${s.id}</p>
                             </div>
                             <span class="bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-full text-xs">${s.points} pts</span>
                         </div>
+                        <div class="flex gap-1">
+                            <button onclick="adjustStudentPoints(${sIdx}, 1)" class="flex-1 bg-emerald-100 text-emerald-700 font-bold py-1 rounded text-xs hover:bg-emerald-200">+1</button>
+                            <button onclick="adjustStudentPoints(${sIdx}, 5)" class="flex-1 bg-emerald-600 text-white font-bold py-1 rounded text-xs hover:bg-emerald-700">+5</button>
+                            <button onclick="adjustStudentPoints(${sIdx}, -1)" class="flex-1 bg-rose-100 text-rose-700 font-bold py-1 rounded text-xs hover:bg-rose-200">-1</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Groups
+            const groupContainer = document.getElementById('groups-grid');
+            groupContainer.innerHTML = '';
+            const classGroups = groups.filter(g => g.class === activeClass);
+
+            classGroups.forEach(g => {
+                const gIdx = groups.findIndex(x => x.id === g.id);
+                groupContainer.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800">${g.name}</h4>
+                            <span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full text-xs">${g.points} pts</span>
+                        </div>
                         <div class="flex gap-2">
-                            <button onclick="adjustPoints(${idx}, 1)" class="flex-1 bg-emerald-100 text-emerald-700 font-bold py-1 rounded hover:bg-emerald-200 text-xs">+1 Pt</button>
-                            <button onclick="adjustPoints(${idx}, 5)" class="flex-1 bg-emerald-600 text-white font-bold py-1 rounded hover:bg-emerald-700 text-xs">+5 Pts</button>
-                            <button onclick="adjustPoints(${idx}, -1)" class="flex-1 bg-rose-100 text-rose-700 font-bold py-1 rounded hover:bg-rose-200 text-xs">-1 Pt</button>
+                            <button onclick="adjustGroupPoints(${gIdx}, 1)" class="flex-1 bg-emerald-600 text-white font-bold py-1 rounded text-xs">+1 Group Pt</button>
+                            <button onclick="adjustGroupPoints(${gIdx}, -1)" class="flex-1 bg-rose-600 text-white font-bold py-1 rounded text-xs">-1 Group Pt</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Tab Switching
-        function switchTab(tabName) {
-            ['students', 'groups', 'quizzes'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className = "pb-3 border-b-2 border-transparent text-slate-500 font-semibold text-sm";
-            });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabName}`).className = "pb-3 border-b-2 border-indigo-600 text-indigo-600 font-bold text-sm";
+        function adjustStudentPoints(idx, delta) {
+            students[idx].points += delta;
+            playSoundEffect(delta > 0 ? 'add' : 'deduct');
+            triggerVisualEffect(delta > 0 ? 'add' : 'deduct');
+            saveData();
         }
 
-        // Role Switching
+        function adjustGroupPoints(idx, delta) {
+            groups[idx].points += delta;
+            playSoundEffect(delta > 0 ? 'add' : 'deduct');
+            triggerVisualEffect(delta > 0 ? 'add' : 'deduct');
+            saveData();
+        }
+
+        function addStudent() {
+            const name = document.getElementById('add-student-name').value.trim();
+            const id = document.getElementById('add-student-id').value.trim() || String(Math.floor(1000 + Math.random() * 9000));
+            if (!name) return;
+            students.push({ id, name, class: activeClass, points: 0, quizzes: [] });
+            document.getElementById('add-student-name').value = '';
+            document.getElementById('add-student-id').value = '';
+            saveData();
+        }
+
+        function addGroup() {
+            const name = document.getElementById('group-name-input').value.trim();
+            if (!name) return;
+            groups.push({ id: Date.now(), name, class: activeClass, points: 0 });
+            document.getElementById('group-name-input').value = '';
+            saveData();
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-students').classList.toggle('hidden', tab !== 'students');
+            document.getElementById('tab-groups').classList.toggle('hidden', tab !== 'groups');
+        }
+
         function switchRole(role) {
             document.getElementById('teacher-view').classList.toggle('hidden', role !== 'teacher');
             document.getElementById('student-view').classList.toggle('hidden', role !== 'student');
         }
 
-        // Update Dropdowns
-        function updateDropdowns() {
-            const quizSelect = document.getElementById('quiz-student-select');
-            const parentSelect = document.getElementById('parent-student-select');
-            quizSelect.innerHTML = '<option value="">Select Student...</option>';
-            parentSelect.innerHTML = '<option value="">-- Choose Profile --</option>';
+        function updateParentDropdown() {
+            const select = document.getElementById('parent-student-select');
+            select.innerHTML = '<option value="">-- Select Student --</option>';
             students.forEach((s, idx) => {
-                quizSelect.innerHTML += `<option value="${idx}">${s.name}</option>`;
-                parentSelect.innerHTML += `<option value="${idx}">${s.name}</option>`;
+                select.innerHTML += `<option value="${idx}">${s.name} (${s.class})</option>`;
             });
         }
 
-        // Record Quiz
-        function recordQuizScore() {
-            const idx = document.getElementById('quiz-student-select').value;
-            const title = document.getElementById('quiz-title').value.trim();
-            const score = document.getElementById('quiz-score').value;
-            if (idx === "" || !title || score === "") return alert("Please complete form fields.");
-            students[idx].quizzes.push({ title, score });
-            document.getElementById('quiz-title').value = '';
-            document.getElementById('quiz-score').value = '';
-            saveData();
-            alert("Quiz Score Recorded!");
-        }
-
-        // Parent Portal Display
         function renderParentPortal() {
             const idx = document.getElementById('parent-student-select').value;
             const content = document.getElementById('private-portal-content');
             if (idx === "") return content.classList.add('hidden');
-            
             const s = students[idx];
-            document.getElementById('portal-student-name').textContent = s.name;
-            document.getElementById('portal-student-id').textContent = `ID: ${s.id} | Class: ${s.class}`;
-            document.getElementById('portal-student-points').textContent = `${s.points} Points`;
-
-            // QR Code
-            const qrContainer = document.getElementById('portal-qrcode');
-            qrContainer.innerHTML = '';
-            new QRCode(qrContainer, { text: `STUDENT_ID:${s.id}`, width: 100, height: 100 });
-
-            // Quizzes Table
-            const quizTable = document.getElementById('portal-quiz-table');
-            quizTable.innerHTML = s.quizzes.length === 0 ? '<tr><td colspan="2" class="p-2 text-center text-slate-400">No quizzes logged.</td></tr>' : '';
-            s.quizzes.forEach(q => {
-                quizTable.innerHTML += `<tr class="border-b"><td class="p-2">${q.title}</td><td class="p-2 font-bold text-indigo-600">${q.score}</td></tr>`;
-            });
-
+            document.getElementById('portal-name').textContent = s.name;
+            document.getElementById('portal-class').textContent = `Class: ${s.class} | ID: ${s.id}`;
+            document.getElementById('portal-points').textContent = `${s.points} Pts`;
+            const qr = document.getElementById('portal-qrcode');
+            qr.innerHTML = '';
+            new QRCode(qr, { text: `STUDENT:${s.id}`, width: 100, height: 100 });
             content.classList.remove('hidden');
         }
 
-        // Initialize
         saveData();
     </script>
 </body>
