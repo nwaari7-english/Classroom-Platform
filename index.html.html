@@ -1,282 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ClassBoost — Student Recognition & Learning Analytics</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-:root{
-  --bg:#f5f7fb;--panel:#fff;--text:#182230;--muted:#697586;--line:#e7ebf1;
-  --primary:#5b5ce2;--primary2:#7b61ff;--success:#16a085;--danger:#e05a67;
-  --warning:#f0a34a;--shadow:0 10px 30px rgba(25,35,60,.08);--radius:18px;
-}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}
-.app{display:flex;min-height:100vh}.sidebar{width:250px;background:#151a2d;color:#fff;padding:22px 15px;position:fixed;inset:0 auto 0 0;z-index:20}
-.brand{display:flex;gap:12px;align-items:center;padding:8px 10px 24px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#7b61ff,#4f8cff);display:grid;place-items:center;font-size:22px}
-.brand b{display:block;font-size:16px}.brand small{color:#aeb5c9}.nav{display:grid;gap:5px}.nav button{background:transparent;color:#cbd1e2;text-align:left;padding:12px 13px;border-radius:11px;display:flex;gap:11px;align-items:center}.nav button:hover,.nav button.active{background:#282e49;color:#fff}.nav .section{font-size:10px;color:#7e87a5;text-transform:uppercase;letter-spacing:1.2px;padding:18px 12px 5px}
-.sidebar-bottom{position:absolute;bottom:20px;left:15px;right:15px;background:#202640;padding:12px;border-radius:14px;font-size:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#fff;color:#5657d9;display:grid;place-items:center;font-weight:800}
-.main{margin-left:250px;width:calc(100% - 250px)}.topbar{height:72px;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10}.search{width:min(420px,45vw);background:#f1f3f7;border:1px solid transparent;padding:10px 14px;border-radius:11px;outline:none}.search:focus{border-color:#c9c9ff;background:#fff}.content{padding:28px;max-width:1500px;margin:auto}.view{display:none}.view.active{display:block}.heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.heading h1{margin:0;font-size:28px}.heading p{margin:7px 0 0;color:var(--muted)}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{padding:10px 14px;border-radius:11px;background:#eef0f6;color:var(--text);font-weight:650}.btn.primary{background:var(--primary);color:white}.btn.success{background:#e6f8f2;color:#117b65}.btn.danger{background:#fff0f1;color:#c84553}.btn.dark{background:#202640;color:#fff}.btn.sm{padding:7px 10px;font-size:12px}.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:19px}.stat .label{color:var(--muted);font-size:13px}.stat .value{font-size:29px;font-weight:800;margin-top:7px}.stat .trend{font-size:12px;margin-top:7px;color:var(--success)}.iconbox{width:42px;height:42px;border-radius:12px;background:#f0efff;display:grid;place-items:center;font-size:21px;float:right}.two{grid-template-columns:1.25fr .75fr}.three{grid-template-columns:repeat(3,1fr)}.chartbox{height:290px}.card-title{font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.table th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}.pill{padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;background:#eef0f6}.pill.green{background:#e5f7f1;color:#137c65}.pill.orange{background:#fff2df;color:#a96516}.pill.red{background:#ffebed;color:#c84756}.student{display:flex;align-items:center;gap:11px}.mini{width:38px;height:38px;border-radius:12px;background:#e9eaff;display:grid;place-items:center;font-weight:800;color:#5355d8}.progress{height:8px;background:#edf0f5;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));border-radius:99px}.groups{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.group-card{position:relative;overflow:hidden}.group-icon{font-size:34px}.rank{position:absolute;right:16px;top:16px;background:#fff2d9;color:#a16b16;border-radius:99px;padding:5px 9px;font-size:12px;font-weight:800}.muted{color:var(--muted)}.kpi{font-size:24px;font-weight:800}.list{display:grid;gap:9px}.list-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.empty{text-align:center;color:var(--muted);padding:35px}
-.modal{position:fixed;inset:0;background:rgba(12,16,30,.5);display:none;place-items:center;z-index:50;padding:20px}.modal.open{display:grid}.modalbox{background:#fff;width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:20px;padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.2)}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modalhead h2{margin:0}.close{background:#f0f2f6;border-radius:9px;width:34px;height:34px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:750;color:#586274}.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:10px;padding:10px 11px;outline:none;background:#fff}.field textarea{min-height:100px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.toast{position:fixed;right:22px;bottom:22px;background:#202640;color:#fff;padding:13px 16px;border-radius:13px;box-shadow:var(--shadow);z-index:100;display:none}.toast.show{display:block;animation:toast .25s ease}.celebrate{position:fixed;inset:0;background:rgba(20,23,43,.88);display:none;place-items:center;z-index:80;color:white;text-align:center}.celebrate.show{display:grid}.celebrate h2{font-size:48px;margin:10px}.celebrate .big{font-size:90px}.celebrate-inner{animation:pop .5s ease}.classroom{background:#11162a;color:white;min-height:calc(100vh - 72px);margin:-28px;padding:34px;display:grid;place-items:center}.classroom-inner{width:min(1100px,100%)}.classroom h1{font-size:42px;margin:0 0 8px}.classroom .sub{color:#aab2c9}.leaderboard{display:grid;gap:14px;margin-top:25px}.leader{display:grid;grid-template-columns:55px 1fr 100px;align-items:center;background:#1b223c;border:1px solid #303955;border-radius:17px;padding:18px}.leader .emoji{font-size:28px}.leader .points{font-size:25px;font-weight:850;text-align:right}.leaderbar{height:9px;background:#303955;border-radius:99px;margin-top:8px;overflow:hidden}.leaderbar span{height:100%;display:block;background:linear-gradient(90deg,#7b61ff,#4f8cff)}.privacy{display:inline-flex;align-items:center;gap:7px;background:#24304f;padding:8px 11px;border-radius:999px;font-size:12px}.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.filters select{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}.badge{display:inline-flex;align-items:center;gap:6px;background:#f4f1ff;border:1px solid #e4dfff;padding:7px 10px;border-radius:10px;font-size:12px;font-weight:700;margin:4px}.note{border-left:4px solid var(--primary);padding:11px 13px;background:#f7f7ff;border-radius:8px}.switch{display:flex;gap:8px;align-items:center}.qr{width:180px;height:180px;background:repeating-linear-gradient(45deg,#111 0 4px,#fff 4px 8px);border:12px solid #fff;box-shadow:0 0 0 1px #ddd;margin:auto}.print-card{display:none}
-@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}@keyframes toast{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
-@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}.sidebar{width:80px}.brand div:not(.logo),.nav button span:last-child,.sidebar-bottom div{display:none}.main{margin-left:80px;width:calc(100% - 80px)}.sidebar-bottom{display:grid;place-items:center}.formgrid{grid-template-columns:1fr}}
-@media(max-width:650px){.topbar{padding:0 14px}.content{padding:18px}.heading{display:block}.actions{margin-top:14px}.stats{grid-template-columns:1fr}.search{width:50vw}.leader{grid-template-columns:45px 1fr 75px}.leader .points{font-size:19px}.classroom{margin:-18px;padding:20px}.classroom h1{font-size:30px}}
-@media print{body{background:white}.sidebar,.topbar,.no-print{display:none!important}.main{margin:0;width:100%}.content{padding:0}.print-card{display:block}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Anwaar Al Farsi - Student Recognition Platform</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            accent: {
+              400: '#a855f7',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.8); border-radius: 4px; }
+    
+    @media print {
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-card { page-break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+    }
+  </style>
 </head>
-<body>
-<div class="app">
-<aside class="sidebar">
-  <div class="brand"><div class="logo">🚀</div><div><b>ClassBoost</b><small>Teacher Edition</small></div></div>
-  <div class="nav">
-    <div class="section">Workspace</div>
-    <button class="active" data-view="dashboard">🏠 <span>Dashboard</span></button>
-    <button data-view="classes">🏫 <span>Classes</span></button>
-    <button data-view="students">👩‍🎓 <span>Students</span></button>
-    <button data-view="groups">🏆 <span>Groups</span></button>
-    <button data-view="recognition">⭐ <span>Recognition</span></button>
-    <button data-view="quizzes">📝 <span>Paper Quizzes</span></button>
-    <button data-view="challenges">🎯 <span>Challenges</span></button>
-    <div class="section">Insights</div>
-    <button data-view="analytics">📊 <span>Analytics</span></button>
-    <button data-view="parents">👨‍👩‍👧 <span>Parent Portal</span></button>
-    <button data-view="reports">📋 <span>Reports</span></button>
-    <button data-view="classroom">🖥️ <span>Classroom Mode</span></button>
-    <div class="section">System</div>
-    <button data-view="settings">⚙️ <span>Settings</span></button>
-  </div>
-  <div class="sidebar-bottom"><div style="display:flex;gap:9px;align-items:center"><div class="avatar">AA</div><div><b>Teacher. Anwaar Alfarsi</b><br><span style="color:#9da6bf">Administrator</span></div></div></div>
-</aside>
-<main class="main">
-<header class="topbar">
-  <input id="globalSearch" class="search" placeholder="🔎 Search students, classes or groups...">
-  <div style="display:flex;gap:10px;align-items:center"><span class="pill green">● Local Demo</span><button class="btn sm" onclick="toggleDark()">🌙</button></div>
-</header>
-<section class="content">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased custom-scrollbar flex flex-col">
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="view active">
- <div class="heading"><div><h1>Good morning, Teacher Anwaar 👋</h1><p>Your classroom recognition command center.</p></div><div class="actions"><button class="btn primary" onclick="openRecognition()">⭐ Give Recognition</button><button class="btn" onclick="openModal('challengeModal')">🎯 New Challenge</button></div></div>
- <div class="grid stats">
-  <div class="card stat"><div class="iconbox">👩‍🎓</div><div class="label">Total Students</div><div class="value" id="statStudents">0</div><div class="trend">Across active classes</div></div>
-  <div class="card stat"><div class="iconbox">⭐</div><div class="label">Recognition Points</div><div class="value" id="statPoints">0</div><div class="trend">Lifetime activity</div></div>
-  <div class="card stat"><div class="iconbox">📝</div><div class="label">Quiz Average</div><div class="value" id="statQuiz">0%</div><div class="trend">Paper-based records</div></div>
-  <div class="card stat"><div class="iconbox">🌱</div><div class="label">Students Improving</div><div class="value" id="statImproving">0</div><div class="trend">Positive trend</div></div>
- </div>
- <div class="grid two" style="margin-top:16px">
-  <div class="card"><div class="card-title">📈 Performance Trend <span class="muted">Last 5 quizzes</span></div><div class="chartbox"><canvas id="trendChart"></canvas></div></div>
-  <div class="card"><div class="card-title">🏆 Group Leaderboard <button class="btn sm" onclick="go('groups')">View all</button></div><div id="dashGroups" class="list"></div></div>
- </div>
- <div class="grid two" style="margin-top:16px">
-  <div class="card"><div class="card-title">🔔 Classroom Pulse</div><div id="pulse" class="list"></div></div>
-  <div class="card"><div class="card-title">⚡ Quick Actions</div><div class="grid two"><button class="btn" onclick="openRecognition()">⭐ Award Points</button><button class="btn" onclick="openModal('studentModal')">👩‍🎓 Add Student</button><button class="btn" onclick="openModal('quizModal')">📝 Add Quiz</button><button class="btn" onclick="document.getElementById('excelInput').click()">📥 Import Excel</button></div></div>
- </div>
-</div>
+  <div id="app" class="flex-1 flex flex-col min-h-screen"></div>
 
-<!-- CLASSES -->
-<div id="classes" class="view">
- <div class="heading"><div><h1>🏫 Classes</h1><p>Create, edit, archive and manage your teaching groups.</p></div><div class="actions"><button class="btn primary" onclick="openModal('classModal')">+ Add Class</button></div></div>
- <div id="classCards" class="grid three"></div>
-</div>
+  <script>
+    // ==========================================
+    // 1. STATE MANAGEMENT & DATA MODELS
+    // ==========================================
 
-<!-- STUDENTS -->
-<div id="students" class="view">
- <div class="heading"><div><h1>👩‍🎓 Students</h1><p>Individual profiles, points, quiz history, badges and teacher notes.</p></div><div class="actions"><button class="btn" onclick="document.getElementById('excelInput').click()">📥 Import Excel</button><button class="btn" onclick="exportStudents()">📤 Export Excel</button><button class="btn primary" onclick="openModal('studentModal')">+ Add Student</button></div></div>
- <div class="card">
-  <div class="filters"><select id="studentClassFilter" onchange="renderStudents()"><option value="">All Classes</option></select><select id="studentGroupFilter" onchange="renderStudents()"><option value="">All Groups</option></select></div>
-  <div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Class</th><th>Group</th><th>Points</th><th>Quiz Avg</th><th>Badges</th><th>Status</th><th></th></tr></thead><tbody id="studentTable"></tbody></table></div>
- </div>
-</div>
+    const DEFAULT_CLASSES = ["11/1", "11/8", "11/11"];
+    const TEACHER_PIN = "6441";
 
-<!-- GROUPS -->
-<div id="groups" class="view">
- <div class="heading"><div><h1>🏆 Groups</h1><p>Fair group competition using total and per-student normalized scores.</p></div><button class="btn primary" onclick="openModal('groupModal')">+ Add Group</button></div>
- <div class="filters"><select id="groupClassFilter" onchange="renderGroups()"><option value="">All Classes</option></select></div>
- <div id="groupCards" class="grid groups"></div>
-</div>
-
-<!-- RECOGNITION -->
-<div id="recognition" class="view">
- <div class="heading"><div><h1>⭐ Recognition</h1><p>Fast positive reinforcement with a complete point transaction history.</p></div><button class="btn primary" onclick="openRecognition()">+ Give Recognition</button></div>
- <div class="grid two"><div class="card"><div class="card-title">Recent Recognition</div><div id="recognitionList"></div></div><div class="card"><div class="card-title">Recognition Categories</div><div id="categoryStats"></div></div></div>
-</div>
-
-<!-- QUIZZES -->
-<div id="quizzes" class="view">
- <div class="heading"><div><h1>📝 Paper Quizzes</h1><p>Record scores from paper-based classroom assessments. No online quiz delivery.</p></div><div class="actions"><button class="btn" onclick="exportQuizScores()">📤 Export Scores</button><button class="btn primary" onclick="openModal('quizModal')">+ Add Paper Quiz</button></div></div>
- <div class="card"><div class="card-title">Assessment Records</div><div class="table-wrap"><table class="table"><thead><tr><th>Quiz</th><th>Topic</th><th>Date</th><th>Class</th><th>Total Marks</th><th>Average</th><th>Students</th><th></th></tr></thead><tbody id="quizTable"></tbody></table></div></div>
-</div>
-
-<!-- CHALLENGES -->
-<div id="challenges" class="view">
- <div class="heading"><div><h1>🎯 Challenges</h1><p>Class and group goals designed for positive, collaborative competition.</p></div><button class="btn primary" onclick="openModal('challengeModal')">+ New Challenge</button></div>
- <div id="challengeList" class="grid three"></div>
-</div>
-
-<!-- ANALYTICS -->
-<div id="analytics" class="view">
- <div class="heading"><div><h1>📊 Analytics</h1><p>Evidence-based classroom insights without exposing private student data in Classroom Mode.</p></div><button class="btn" onclick="exportStudents()">📤 Export Data</button></div>
- <div class="grid stats"><div class="card stat"><div class="label">Average Quiz Score</div><div class="value" id="aQuiz">0%</div></div><div class="card stat"><div class="label">Highest Score</div><div class="value" id="aHigh">0%</div></div><div class="card stat"><div class="label">Improvement</div><div class="value" id="aGrowth">0%</div></div><div class="card stat"><div class="label">Attention Indicators</div><div class="value" id="aAttention">0</div></div></div>
- <div class="grid two" style="margin-top:16px"><div class="card"><div class="card-title">Quiz Performance</div><div class="chartbox"><canvas id="quizChart"></canvas></div></div><div class="card"><div class="card-title">Group Performance</div><div class="chartbox"><canvas id="groupChart"></canvas></div></div></div>
- <div class="card" style="margin-top:16px"><div class="card-title">💡 Teacher Insights</div><div id="insights" class="list"></div></div>
-</div>
-
-<!-- PARENTS -->
-<div id="parents" class="view">
- <div class="heading"><div><h1>👨‍👩‍👧 Parent Portal Preview</h1><p>Preview the information that can be shared with a parent for a selected student.</p></div></div>
- <div class="card"><div class="filters"><select id="parentStudent" onchange="renderParent()"></select></div><div id="parentPanel"></div></div>
-</div>
-
-<!-- REPORTS -->
-<div id="reports" class="view">
- <div class="heading"><div><h1>📋 Reports</h1><p>Generate printable student and class performance summaries.</p></div></div>
- <div class="grid three"><div class="card"><h3>Class Report</h3><p class="muted">Performance, groups, quizzes and improvement.</p><button class="btn primary" onclick="printReport()">🖨️ Print Report</button></div><div class="card"><h3>Student Report</h3><select id="reportStudent" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px"></select><button class="btn primary" style="margin-top:10px" onclick="studentReport()">Generate</button></div><div class="card"><h3>Student ID Cards</h3><p class="muted">Printable cards with QR access placeholder.</p><button class="btn primary" onclick="printCards()">🪪 Print Cards</button></div></div>
- <div id="reportOutput" class="card" style="margin-top:16px"></div>
-</div>
-
-<!-- CLASSROOM -->
-<div id="classroom" class="view">
- <div class="classroom">
-  <div class="classroom-inner">
-   <div style="display:flex;justify-content:space-between;gap:15px;align-items:center"><div><div class="privacy">🔒 Privacy Mode ON · No individual scores shown</div><h1>🏆 Classroom Challenge</h1><div class="sub">Group competition, class goals and positive recognition.</div></div><button class="btn" onclick="openModal('challengeModal')">🎯 New Challenge</button></div>
-   <div class="leaderboard" id="classroomBoard"></div>
-   <div class="card" style="margin-top:22px;background:#1b223c;border-color:#303955;color:#fff"><div class="card-title">🎯 Today's Class Goal <span id="goalText">0 / 500 ⭐</span></div><div class="progress" style="height:14px;background:#303955"><span id="goalBar" style="width:0"></span></div></div>
-  </div>
- </div>
-</div>
-
-<!-- SETTINGS -->
-<div id="settings" class="view">
- <div class="heading"><div><h1>⚙️ Settings</h1><p>Control classroom privacy, sound, theme and local data.</p></div></div>
- <div class="card list">
-  <div class="list-item"><div><b>🔊 Recognition Sounds</b><br><span class="muted">Play a short sound after points are awarded.</span></div><input id="soundSetting" type="checkbox" checked onchange="saveSetting('sound',this.checked)"></div>
-  <div class="list-item"><div><b>🔒 Classroom Privacy Mode</b><br><span class="muted">Keep individual student data out of the projector view.</span></div><input type="checkbox" checked disabled></div>
-  <div class="list-item"><div><b>💾 Local Data</b><br><span class="muted">This GitHub demo stores data in your browser.</span></div><button class="btn danger" onclick="resetDemo()">Reset Demo Data</button></div>
- </div>
-</div>
-
-<input id="excelInput" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
-</section>
-</main>
-</div>
-
-<!-- MODALS -->
-<div class="modal" id="classModal"><div class="modalbox"><div class="modalhead"><h2>🏫 Add Class</h2><button class="close" onclick="closeModal('classModal')">×</button></div><div class="formgrid"><div class="field"><label>Class Name</label><input id="className" placeholder="Grade 10 – A"></div><div class="field"><label>Grade</label><input id="classGrade" placeholder="Grade 10"></div><div class="field"><label>Section</label><input id="classSection" placeholder="A"></div><div class="field"><label>Academic Year</label><input id="classYear" value="2026–2027"></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('classModal')">Cancel</button><button class="btn primary" onclick="addClass()">Create Class</button></div></div></div>
-
-<div class="modal" id="studentModal"><div class="modalbox"><div class="modalhead"><h2>👩‍🎓 Add Student</h2><button class="close" onclick="closeModal('studentModal')">×</button></div><div class="formgrid"><div class="field"><label>First Name</label><input id="sFirst"></div><div class="field"><label>Last Name</label><input id="sLast"></div><div class="field"><label>Student ID</label><input id="sId"></div><div class="field"><label>Class</label><select id="sClass"></select></div><div class="field"><label>Group</label><select id="sGroup"></select></div><div class="field full"><label>Parent / Guardian</label><input id="sParent" placeholder="Optional"></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('studentModal')">Cancel</button><button class="btn primary" onclick="addStudent()">Save Student</button></div></div></div>
-
-<div class="modal" id="groupModal"><div class="modalbox"><div class="modalhead"><h2>🏆 Add Group</h2><button class="close" onclick="closeModal('groupModal')">×</button></div><div class="formgrid"><div class="field"><label>Group Name</label><input id="gName" placeholder="Eagles"></div><div class="field"><label>Icon</label><input id="gIcon" value="🦅"></div><div class="field full"><label>Class</label><select id="gClass"></select></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('groupModal')">Cancel</button><button class="btn primary" onclick="addGroup()">Create Group</button></div></div></div>
-
-<div class="modal" id="recognitionModal"><div class="modalbox"><div class="modalhead"><h2>⭐ Give Recognition</h2><button class="close" onclick="closeModal('recognitionModal')">×</button></div><div class="formgrid"><div class="field full"><label>Student</label><select id="rStudent"></select></div><div class="field"><label>Points</label><select id="rPoints"><option>1</option><option>2</option><option selected>5</option><option>10</option><option>15</option></select></div><div class="field"><label>Category</label><select id="rCategory"><option>Academic</option><option>Participation</option><option>Collaboration</option><option>Creativity</option><option>Leadership</option><option>Improvement</option><option>Responsibility</option></select></div><div class="field full"><label>Evidence / Comment</label><textarea id="rComment" placeholder="What did the student demonstrate?"></textarea></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('recognitionModal')">Cancel</button><button class="btn primary" onclick="giveRecognition()">Award Points ⭐</button></div></div></div>
-
-<div class="modal" id="quizModal"><div class="modalbox"><div class="modalhead"><h2>📝 Add Paper Quiz</h2><button class="close" onclick="closeModal('quizModal')">×</button></div><div class="formgrid"><div class="field"><label>Quiz Name</label><input id="qName" placeholder="Quiz 03"></div><div class="field"><label>Topic</label><input id="qTopic" placeholder="Financial Ratios"></div><div class="field"><label>Date</label><input id="qDate" type="date"></div><div class="field"><label>Total Marks</label><input id="qTotal" type="number" value="20" min="1"></div><div class="field full"><label>Class</label><select id="qClass"></select></div><div class="field full"><label>Scores</label><div id="scoreInputs"></div></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('quizModal')">Cancel</button><button class="btn primary" onclick="saveQuiz()">Save Paper Quiz</button></div></div></div>
-
-<div class="modal" id="challengeModal"><div class="modalbox"><div class="modalhead"><h2>🎯 New Challenge</h2><button class="close" onclick="closeModal('challengeModal')">×</button></div><div class="formgrid"><div class="field full"><label>Challenge Title</label><input id="cTitle" placeholder="First group to solve today's problem"></div><div class="field"><label>Target Points</label><input id="cTarget" type="number" value="25"></div><div class="field"><label>Duration</label><input id="cDuration" placeholder="Today"></div><div class="field full"><label>Reward / Outcome</label><input id="cReward" placeholder="+25 ⭐ to winning group"></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('challengeModal')">Cancel</button><button class="btn primary" onclick="saveChallenge()">Create Challenge</button></div></div></div>
-
-<div class="modal" id="profileModal"><div class="modalbox"><div class="modalhead"><h2 id="profileTitle">Student Profile</h2><button class="close" onclick="closeModal('profileModal')">×</button></div><div id="profileContent"></div></div></div>
-
-<div class="celebrate" id="celebrate"><div class="celebrate-inner"><div class="big">🎉</div><h2 id="celebrateTitle">Excellent Work!</h2><div id="celebrateText">+5 POINTS</div><button class="btn" style="margin-top:20px" onclick="document.getElementById('celebrate').classList.remove('show')">Continue</button></div></div>
-<div class="toast" id="toast"></div>
-
-<script>
-const KEY='classboost_demo_v1';
-const seed={
- classes:[
-  {id:'c1',name:'Grade 10 – A',grade:'Grade 10',section:'A',year:'2026–2027',active:true},
-  {id:'c2',name:'Grade 10 – B',grade:'Grade 10',section:'B',year:'2026–2027',active:true},
-  {id:'c3',name:'Grade 11 – A',grade:'Grade 11',section:'A',year:'2026–2027',active:true}
- ],
- groups:[
-  {id:'g1',name:'Eagles',icon:'🦅',classId:'c1',points:287},{id:'g2',name:'Phoenix',icon:'🔥',classId:'c1',points:274},{id:'g3',name:'Wolves',icon:'🐺',classId:'c1',points:251},{id:'g4',name:'Explorers',icon:'🚀',classId:'c1',points:239},{id:'g5',name:'Stars',icon:'🌟',classId:'c1',points:218},{id:'g6',name:'Thinkers',icon:'🧠',classId:'c1',points:205},{id:'g7',name:'Innovators',icon:'⚡',classId:'c1',points:191},
-  {id:'g8',name:'Falcons',icon:'🦅',classId:'c2',points:255},{id:'g9',name:'Comets',icon:'☄️',classId:'c2',points:232},{id:'g10',name:'Lions',icon:'🦁',classId:'c2',points:218},{id:'g11',name:'Pioneers',icon:'🧭',classId:'c2',points:201},{id:'g12',name:'Minds',icon:'🧠',classId:'c2',points:188},{id:'g13',name:'Stars',icon:'🌟',classId:'c2',points:176},
-  {id:'g14',name:'Orbits',icon:'🪐',classId:'c3',points:265},{id:'g15',name:'Titans',icon:'🏛️',classId:'c3',points:241},{id:'g16',name:'Voyagers',icon:'🚀',classId:'c3',points:225},{id:'g17',name:'Owls',icon:'🦉',classId:'c3',points:210},{id:'g18',name:'Makers',icon:'🛠️',classId:'c3',points:198},{id:'g19',name:'Stars',icon:'🌟',classId:'c3',points:184}
- ],
- students:[],
- transactions:[],
- quizzes:[],
- challenges:[{id:'ch1',title:"Today's Class Goal",target:500,duration:'Today',reward:'Celebrate when the class reaches 500 ⭐',status:'Active'}],
- settings:{sound:true}
-};
-function uid(p){return p+Math.random().toString(36).slice(2,9)}
-function load(){try{let d=JSON.parse(localStorage.getItem(KEY));return d||structuredClone(seed)}catch(e){return structuredClone(seed)}}
-let db=load();
-if(!db.students.length){
- const names=['Sara Ahmed','Noor Ali','Huda Said','Amal Hassan','Maha Khalid','Aisha Salem','Reem Nasser','Fatma Said','Maryam Ali','Rawan Ahmed','Layan Saif','Muna Hassan','Haneen Omar','Dana Khalid','Shahad Ali','Abeer Salem','Zainab Said','Jana Ahmed','Rania Ali','Hessa Nasser','Basma Omar','Ruqaya Hassan','Alya Said','Mariam Khalid','Noura Salem','Safa Ali','Wafa Ahmed','Amani Said','Asma Hassan','Joud Ali','Rama Nasser','Lama Salem','Mira Ahmed','Razan Ali','Sana Said','Hala Hassan','Lina Khalid','Nada Salem','Rim Ali','Aya Ahmed'];
- names.forEach((n,i)=>{let g=db.groups[i%7], c=db.classes.find(x=>x.id===g.classId);db.students.push({id:'S'+(1001+i),first:n.split(' ')[0],last:n.split(' ').slice(1).join(' '),classId:c.id,groupId:g.id,points:40+(i*7)%115,badges:i%5,parent:i%3===0?'Parent/Guardian '+(i+1):'',notes:[]})});
-}
-function save(){localStorage.setItem(KEY,JSON.stringify(db))}
-function go(view){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(view).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));renderAll()}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
-function cls(id){return db.classes.find(c=>c.id===id)?.name||'—'}
-function grp(id){return db.groups.find(g=>g.id===id)}
-function studentName(s){return s.first+' '+s.last}
-function quizAvg(s){
- const qs=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>x.pct));
- return qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0
-}
-function avgAll(){let a=db.students.map(quizAvg).filter(x=>x);return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0}
-function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-function openModal(id){fillSelects();if(id==='quizModal'){document.getElementById('qDate').value=new Date().toISOString().slice(0,10);updateScoreInputs()}document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function fillSelects(){
- const classOpts='<option value="">Select class</option>'+db.classes.filter(c=>c.active!==false).map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
- ['sClass','gClass','qClass'].forEach(id=>{let e=document.getElementById(id);if(e)e.innerHTML=classOpts});
- const groupOpts='<option value="">Select group</option>'+db.groups.map(g=>`<option value="${g.id}">${g.icon} ${g.name} · ${cls(g.classId)}</option>`).join('');let sg=document.getElementById('sGroup');if(sg)sg.innerHTML=groupOpts;
- const studentOpts=db.students.map(s=>`<option value="${s.id}">${studentName(s)} · ${cls(s.classId)}</option>`).join('');
- ['rStudent','parentStudent','reportStudent'].forEach(id=>{let e=document.getElementById(id);if(e){let old=e.value;e.innerHTML=studentOpts;e.value=old||db.students[0]?.id||''}});
- const cf='<option value="">All Classes</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
- ['studentClassFilter','groupClassFilter'].forEach(id=>{let e=document.getElementById(id);if(e&&!e.value)e.innerHTML=cf});
-}
-function addClass(){let name=val('className'),grade=val('classGrade'),section=val('classSection');if(!name)return toast('Enter a class name.');db.classes.push({id:uid('c'),name,grade,section,year:val('classYear'),active:true});save();closeModal('classModal');toast('Class created successfully.');renderAll()}
-function addGroup(){let name=val('gName'),classId=val('gClass');if(!name||!classId)return toast('Group name and class are required.');db.groups.push({id:uid('g'),name,icon:val('gIcon')||'⭐',classId,points:0});save();closeModal('groupModal');toast('Group created.');renderAll()}
-function addStudent(){let first=val('sFirst'),last=val('sLast'),classId=val('sClass'),groupId=val('sGroup');if(!first||!last||!classId)return toast('First name, last name and class are required.');db.students.push({id:val('sId')||uid('S'),first,last,classId,groupId,points:0,badges:0,parent:val('sParent'),notes:[]});save();closeModal('studentModal');toast('Student added.');renderAll()}
-function openRecognition(){fillSelects();openModal('recognitionModal')}
-function giveRecognition(){let sid=val('rStudent'),pts=+val('rPoints'),cat=val('rCategory'),comment=val('rComment');let s=db.students.find(x=>x.id===sid);if(!s)return; s.points+=pts;let g=grp(s.groupId);if(g)g.points+=pts;db.transactions.unshift({id:uid('t'),studentId:sid,points:pts,category:cat,comment,date:new Date().toLocaleString()});save();closeModal('recognitionModal');document.getElementById('celebrateTitle').textContent='🌟 '+studentName(s);document.getElementById('celebrateText').textContent='+'+pts+' POINTS · '+cat;document.getElementById('celebrate').classList.add('show');renderAll()}
-function updateScoreInputs(){let c=val('qClass'), students=db.students.filter(s=>!c||s.classId===c);document.getElementById('scoreInputs').innerHTML=students.map(s=>`<div style="display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center;margin-bottom:7px"><span>${studentName(s)}</span><input type="number" min="0" step="0.5" data-score="${s.id}" placeholder="score"></div>`).join('')}
-document.getElementById('qClass').addEventListener('change',updateScoreInputs);
-function saveQuiz(){let name=val('qName'),topic=val('qTopic'),total=+val('qTotal'),classId=val('qClass');if(!name||!classId||!total)return toast('Quiz name, class and total marks are required.');let scores=[];document.querySelectorAll('[data-score]').forEach(i=>{if(i.value!==''){let score=Math.min(total,+i.value);scores.push({studentId:i.dataset.score,score,pct:Math.round(score/total*100)})}});db.quizzes.push({id:uid('q'),name,topic,date:val('qDate'),total,classId,scores});save();closeModal('quizModal');toast('Paper quiz recorded.');renderAll()}
-function saveChallenge(){let title=val('cTitle');if(!title)return toast('Enter a challenge title.');db.challenges.unshift({id:uid('ch'),title,target:+val('cTarget')||0,duration:val('cDuration')||'Today',reward:val('cReward'),status:'Active'});save();closeModal('challengeModal');toast('Challenge created.');renderAll()}
-function renderDashboard(){
- document.getElementById('statStudents').textContent=db.students.length;document.getElementById('statPoints').textContent=db.students.reduce((a,s)=>a+s.points,0).toLocaleString();document.getElementById('statQuiz').textContent=avgAll()+'%';
- document.getElementById('statImproving').textContent=db.students.filter(s=>{let q=db.quizzes.flatMap(x=>x.scores.filter(y=>y.studentId===s.id).map(y=>y.pct));return q.length>=2&&q[q.length-1]>q[0]}).length;
- let gs=[...db.groups].sort((a,b)=>b.points-a.points).slice(0,6);document.getElementById('dashGroups').innerHTML=gs.map((g,i)=>`<div class="list-item"><span>${i<3?['🥇','🥈','🥉'][i]:'🏆'} ${g.icon} ${g.name}</span><b>${g.points} ⭐</b></div>`).join('');
- document.getElementById('pulse').innerHTML=[`📈 Class quiz average is <b>${avgAll()}%</b>.`,`⭐ ${db.transactions.length} recognition transactions recorded.`,`👩‍🎓 ${db.students.filter(s=>quizAvg(s)>=90).length} students are currently at 90%+ quiz average.`,`🔒 Classroom Mode hides individual scores and private notes.`].map(x=>`<div class="list-item"><span>${x}</span></div>`).join('');
- renderTrend();
-}
-let charts={};
-function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
-function renderTrend(){destroyChart('trend');let q=db.quizzes.slice(-5);charts.trend=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:q.map(x=>x.name),datasets:[{label:'Class Average %',data:q.map(x=>{let a=x.scores.map(s=>s.pct);return a.length?Math.round(a.reduce((u,v)=>u+v,0)/a.length):0}),tension:.35,borderWidth:3,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0,max:100}}}})}
-function renderClasses(){document.getElementById('classCards').innerHTML=db.classes.map(c=>{let ss=db.students.filter(s=>s.classId===c.id),gs=db.groups.filter(g=>g.classId===c.id);return `<div class="card"><div style="display:flex;justify-content:space-between"><div class="group-icon">🏫</div><span class="pill ${c.active===false?'red':'green'}">${c.active===false?'Archived':'Active'}</span></div><h2>${c.name}</h2><p class="muted">${c.grade} · Section ${c.section} · ${c.year}</p><div class="grid three"><div><div class="kpi">${ss.length}</div><small class="muted">Students</small></div><div><div class="kpi">${gs.length}</div><small class="muted">Groups</small></div><div><div class="kpi">${Math.round(ss.reduce((a,s)=>a+s.points,0))}</div><small class="muted">Points</small></div></div><div style="margin-top:16px;display:flex;gap:8px"><button class="btn sm primary" onclick="filterClass('${c.id}')">Open</button><button class="btn sm" onclick="archiveClass('${c.id}')">${c.active===false?'Restore':'Archive'}</button><button class="btn sm danger" onclick="deleteClass('${c.id}')">Delete</button></div></div>`}).join('')}
-function filterClass(id){document.getElementById('studentClassFilter').value=id;go('students')}
-function archiveClass(id){let c=db.classes.find(x=>x.id===id);c.active=c.active===false;save();toast(c.active?'Class restored.':'Class archived.');renderAll()}
-function deleteClass(id){if(!confirm('Delete this class and keep its student records? This demo will remove only the class record.'))return;db.classes=db.classes.filter(c=>c.id!==id);save();renderAll()}
-function renderStudents(){fillSelects();let cf=val('studentClassFilter'),gf=val('studentGroupFilter');let arr=db.students.filter(s=>(!cf||s.classId===cf)&&(!gf||s.groupId===gf));document.getElementById('studentGroupFilter').innerHTML='<option value="">All Groups</option>'+db.groups.filter(g=>!cf||g.classId===cf).map(g=>`<option value="${g.id}">${g.icon} ${g.name}</option>`).join('');document.getElementById('studentTable').innerHTML=arr.map(s=>`<tr><td><div class="student"><div class="mini">${s.first[0]}${s.last[0]}</div><div><b>${studentName(s)}</b><br><small class="muted">${s.id}</small></div></div></td><td>${cls(s.classId)}</td><td>${grp(s.groupId)?.icon||''} ${grp(s.groupId)?.name||'Unassigned'}</td><td><b>${s.points}</b> ⭐</td><td>${quizAvg(s)}%</td><td>${s.badges} 🏅</td><td><span class="pill ${quizAvg(s)>=85?'green':quizAvg(s)>=70?'orange':'red'}">${quizAvg(s)>=85?'Excellent':quizAvg(s)>=70?'Improving':'Attention'}</span></td><td><button class="btn sm" onclick="viewStudent('${s.id}')">View</button></td></tr>`).join('')||`<tr><td colspan="8" class="empty">No students found.</td></tr>`}
-function renderGroups(){let cf=val('groupClassFilter');let arr=db.groups.filter(g=>!cf||g.classId===cf).sort((a,b)=>b.points-a.points);document.getElementById('groupCards').innerHTML=arr.map((g,i)=>{let ss=db.students.filter(s=>s.groupId===g.id);let avg=ss.length?Math.round(ss.reduce((a,s)=>a+s.points,0)/ss.length):0;return `<div class="card group-card"><span class="rank">#${i+1}</span><div class="group-icon">${g.icon}</div><h2>${g.name}</h2><p class="muted">${cls(g.classId)}</p><div class="kpi">${g.points} ⭐</div><small class="muted">Total points</small><div style="margin-top:13px" class="progress"><span style="width:${Math.min(100,g.points/3)}%"></span></div><div style="display:flex;justify-content:space-between;margin-top:12px"><span>${ss.length} members</span><b>${avg} avg/student</b></div><button class="btn sm" style="margin-top:13px" onclick="awardGroup('${g.id}')">+ Group Points</button></div>`}).join('')}
-function awardGroup(id){let g=grp(id),p=+prompt('Points to award this group:',5);if(!p||p<0)return;g.points+=p;db.students.filter(s=>s.groupId===id).forEach(s=>s.points+=p);save();toast(`+${p} points awarded to ${g.name}.`);renderAll()}
-function renderRecognition(){document.getElementById('recognitionList').innerHTML=db.transactions.slice(0,15).map(t=>{let s=db.students.find(x=>x.id===t.studentId);return `<div class="list-item"><div><b>${studentName(s||{first:'Unknown',last:''})}</b><br><small class="muted">${t.category} · ${t.date}</small>${t.comment?`<br><small>${t.comment}</small>`:''}</div><b style="color:var(--success)">+${t.points} ⭐</b></div>`}).join('')||'<div class="empty">No recognition yet.</div>';let cats={};db.transactions.forEach(t=>cats[t.category]=(cats[t.category]||0)+t.points);document.getElementById('categoryStats').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="list-item"><span>${k}</span><b>${v} ⭐</b></div>`).join('')||'<div class="empty">Add recognition to see category analytics.</div>'}
-function renderQuizzes(){document.getElementById('quizTable').innerHTML=db.quizzes.slice().reverse().map(q=>{let a=q.scores.map(s=>s.pct),avg=a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;return `<tr><td><b>${q.name}</b></td><td>${q.topic}</td><td>${q.date}</td><td>${cls(q.classId)}</td><td>${q.total}</td><td>${avg}%</td><td>${q.scores.length}</td><td><button class="btn sm" onclick="viewQuiz('${q.id}')">View</button></td></tr>`}).join('')||'<tr><td colspan="8" class="empty">No paper quizzes recorded.</td></tr>'}
-function renderChallenges(){document.getElementById('challengeList').innerHTML=db.challenges.map(c=>`<div class="card"><span class="pill green">${c.status}</span><h3>${c.title}</h3><p class="muted">${c.duration}</p><div class="kpi">${c.target} ⭐</div><p>${c.reward||''}</p></div>`).join('')}
-function renderAnalytics(){let av=avgAll(),all=db.quizzes.flatMap(q=>q.scores.map(s=>s.pct));document.getElementById('aQuiz').textContent=av+'%';document.getElementById('aHigh').textContent=(all.length?Math.max(...all):0)+'%';let improvements=db.students.map(s=>{let a=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>x.pct));return a.length>1?a[a.length-1]-a[0]:0}).filter(x=>x!==0);document.getElementById('aGrowth').textContent=(improvements.length?Math.round(improvements.reduce((a,b)=>a+b,0)/improvements.length):0)+'%';document.getElementById('aAttention').textContent=db.students.filter(s=>quizAvg(s)>0&&quizAvg(s)<70).length;destroyChart('quiz');let q=db.quizzes.slice(-6);charts.quiz=new Chart(document.getElementById('quizChart'),{type:'bar',data:{labels:q.map(x=>x.name),datasets:[{label:'Average %',data:q.map(x=>{let a=x.scores.map(s=>s.pct);return a.length?Math.round(a.reduce((u,v)=>u+v,0)/a.length):0})}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0,max:100}}}});destroyChart('group');let gs=[...db.groups].sort((a,b)=>b.points-a.points).slice(0,8);charts.group=new Chart(document.getElementById('groupChart'),{type:'bar',data:{labels:gs.map(g=>g.name),datasets:[{label:'Points',data:gs.map(g=>g.points)}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y'}});document.getElementById('insights').innerHTML=[`Class average quiz performance is <b>${av}%</b>.`,`<b>${db.students.filter(s=>quizAvg(s)>=90).length}</b> students currently average 90% or higher.`,`<b>${db.students.filter(s=>quizAvg(s)>0&&quizAvg(s)<70).length}</b> students have an attention indicator based on low recorded quiz averages.`,`Group scoring uses total points; use per-student average when comparing groups of different sizes.`].map(x=>`<div class="list-item"><span>💡 ${x}</span></div>`).join('')}
-function renderClassroom(){let gs=[...db.groups].sort((a,b)=>b.points-a.points).slice(0,8),max=Math.max(...gs.map(g=>g.points),1);document.getElementById('classroomBoard').innerHTML=gs.map((g,i)=>`<div class="leader"><div class="emoji">${i<3?['🥇','🥈','🥉'][i]:g.icon}</div><div><b>${g.name}</b><div class="leaderbar"><span style="width:${g.points/max*100}%"></span></div></div><div class="points">${g.points} ⭐</div></div>`).join('');let total=db.students.reduce((a,s)=>a+s.points,0),goal=db.challenges.find(c=>c.status==='Active')?.target||500;document.getElementById('goalText').textContent=`${total} / ${goal} ⭐`;document.getElementById('goalBar').style.width=Math.min(100,total/goal*100)+'%'}
-function renderParent(){let s=db.students.find(x=>x.id===val('parentStudent'));if(!s)return;document.getElementById('parentPanel').innerHTML=`<div style="display:flex;gap:18px;align-items:center"><div class="mini" style="width:65px;height:65px;font-size:22px">${s.first[0]}${s.last[0]}</div><div><h2 style="margin:0">${studentName(s)}</h2><p class="muted">${cls(s.classId)} · ${grp(s.groupId)?.name||'No group'}</p></div></div><div class="grid three" style="margin-top:18px"><div class="card"><small class="muted">Recognition Points</small><div class="kpi">${s.points} ⭐</div></div><div class="card"><small class="muted">Quiz Average</small><div class="kpi">${quizAvg(s)}%</div></div><div class="card"><small class="muted">Badges</small><div class="kpi">${s.badges} 🏅</div></div></div><h3>Teacher Updates</h3><div class="note">${s.notes?.[0]||'No parent-visible teacher note has been added yet.'}</div>`}
-function viewStudent(id){let s=db.students.find(x=>x.id===id);document.getElementById('profileTitle').textContent='👩‍🎓 '+studentName(s);let q=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===id).map(x=>({name:q.name,pct:x.pct,score:x.score,total:q.total})));document.getElementById('profileContent').innerHTML=`<div style="text-align:center"><div class="mini" style="width:70px;height:70px;margin:auto;font-size:24px">${s.first[0]}${s.last[0]}</div><h2>${studentName(s)}</h2><p class="muted">${cls(s.classId)} · ${grp(s.groupId)?.icon||''} ${grp(s.groupId)?.name||'Unassigned'}</p></div><div class="grid three"><div class="card"><small class="muted">Points</small><div class="kpi">${s.points} ⭐</div></div><div class="card"><small class="muted">Quiz Avg</small><div class="kpi">${quizAvg(s)}%</div></div><div class="card"><small class="muted">Badges</small><div class="kpi">${s.badges} 🏅</div></div></div><h3>📝 Quiz History</h3>${q.map(x=>`<div class="list-item"><span>${x.name}</span><b>${x.score}/${x.total} · ${x.pct}%</b></div>`).join('')||'<p class="muted">No quiz results yet.</p>'}<h3>📝 Teacher Notes</h3><div class="note">${s.notes?.join('<hr>')||'No notes.'}</div><div style="margin-top:16px;text-align:center"><button class="btn primary" onclick="studentPortal('${s.id}')">Open Student QR Portal Preview</button></div>`;openModal('profileModal')}
-function studentPortal(id){let s=db.students.find(x=>x.id===id);closeModal('profileModal');document.getElementById('profileTitle').textContent='Student Portal';document.getElementById('profileContent').innerHTML=`<div style="text-align:center"><div class="qr" aria-label="QR placeholder"></div><h2>${studentName(s)}</h2><p class="muted">Secure student-specific portal · No other student data visible</p><div class="grid three"><div class="card"><small class="muted">Points</small><div class="kpi">${s.points} ⭐</div></div><div class="card"><small class="muted">Quiz Avg</small><div class="kpi">${quizAvg(s)}%</div></div><div class="card"><small class="muted">Badges</small><div class="kpi">${s.badges} 🏅</div></div></div><h3>Quiz Results</h3>${db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===id).map(x=>`<div class="list-item"><span>${q.name}</span><b>${x.score}/${q.total} · ${x.pct}%</b></div>`)).join('')||'<p class="muted">No quiz results yet.</p>'}</div>`;openModal('profileModal')}
-function viewQuiz(id){let q=db.quizzes.find(x=>x.id===id);alert(q.name+'\\n\\n'+q.scores.map(x=>{let s=db.students.find(z=>z.id===x.studentId);return studentName(s)+': '+x.score+'/'+q.total+' ('+x.pct+'%)'}).join('\\n'))}
-function studentReport(){let s=db.students.find(x=>x.id===val('reportStudent'));if(!s)return;document.getElementById('reportOutput').innerHTML=`<h2>Student Performance Report</h2><p><b>${studentName(s)}</b> · ${cls(s.classId)}</p><div class="grid three"><div><small class="muted">Recognition</small><div class="kpi">${s.points} ⭐</div></div><div><small class="muted">Quiz Average</small><div class="kpi">${quizAvg(s)}%</div></div><div><small class="muted">Badges</small><div class="kpi">${s.badges} 🏅</div></div></div><h3>Assessment History</h3>${db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>`<div class="list-item"><span>${q.name} · ${q.topic}</span><b>${x.score}/${q.total} (${x.pct}%)</b></div>`)).join('')||'<p>No results.</p>'}<h3>Teacher Feedback</h3><div class="note">${s.notes?.join('<br>')||'No note.'}</div>`}
-function printReport(){let out=document.getElementById('reportOutput');out.innerHTML=`<h2>Class Performance Report — ${new Date().toLocaleDateString()}</h2><p>Total students: <b>${db.students.length}</b> · Quiz average: <b>${avgAll()}%</b> · Recognition points: <b>${db.students.reduce((a,s)=>a+s.points,0)}</b></p><h3>Group Performance</h3>${[...db.groups].sort((a,b)=>b.points-a.points).map(g=>`<div class="list-item"><span>${g.icon} ${g.name} · ${cls(g.classId)}</span><b>${g.points} ⭐</b></div>`).join('')}<h3>Teacher Insight</h3><div class="note">Use the analytics dashboard to identify growth patterns and students requiring attention indicators. Individual scores are intentionally excluded from classroom display.</div>`;window.print()}
-function printCards(){toast('Opening printable ID card layout…');let w=window.open('','_blank');w.document.write('<html><head><title>ClassBoost Student ID Cards</title><style>body{font-family:Arial;padding:20px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{border:1px solid #ddd;border-radius:18px;padding:20px;text-align:center;break-inside:avoid}.qr{width:120px;height:120px;background:repeating-linear-gradient(45deg,#111 0 4px,#fff 4px 8px);margin:15px auto}</style></head><body><h1>ClassBoost Student ID Cards</h1><div class="cards">'+db.students.map(s=>`<div class="card"><h2>🚀 ClassBoost</h2><h3>${studentName(s)}</h3><p>${cls(s.classId)} · ${grp(s.groupId)?.name||''}</p><div class="qr"></div><small>Scan for student-specific portal</small></div>`).join('')+'</div><script>window.print()<\/script></body></html>');w.document.close()}
-function exportStudents(){let rows=db.students.map(s=>({StudentID:s.id,FirstName:s.first,LastName:s.last,Class:cls(s.classId),Group:grp(s.groupId)?.name||'',Points:s.points,QuizAverage:quizAvg(s),Badges:s.badges,Parent:s.parent||''}));let ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Students');XLSX.writeFile(wb,'ClassBoost_Students.xlsx')}
-function exportQuizScores(){let rows=[];db.quizzes.forEach(q=>q.scores.forEach(x=>{let s=db.students.find(z=>z.id===x.studentId);rows.push({Quiz:q.name,Topic:q.topic,Date:q.date,Class:cls(q.classId),StudentID:s?.id,Student:s?studentName(s):'',Score:x.score,Total:q.total,Percentage:x.pct})}));let ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Quiz Scores');XLSX.writeFile(wb,'ClassBoost_Quiz_Scores.xlsx')}
-function importExcel(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=ev=>{try{let wb=XLSX.read(ev.target.result,{type:'array'}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);let added=0;rows.forEach((r,i)=>{let first=r.FirstName||r['First Name']||r.Name?.split(' ')[0],last=r.LastName||r['Last Name']||r.Name?.split(' ').slice(1).join(' ')||'',cid=db.classes.find(c=>c.name===(r.Class||r.class))?.id||db.classes[0]?.id,gid=db.groups.find(g=>g.name===(r.Group||r.group))?.id;if(first){db.students.push({id:String(r.StudentID||r.ID||uid('S')),first:String(first),last:String(last),classId:cid,groupId:gid||'',points:+(r.Points||0),badges:+(r.Badges||0),parent:'',notes:[]});added++}});save();toast(`Imported ${added} students from Excel.`);renderAll()}catch(err){toast('Could not read the Excel file. Check column names.')}e.target.value=''};r.readAsArrayBuffer(file)}
-function saveSetting(k,v){db.settings[k]=v;save();toast('Setting saved.')}
-function resetDemo(){if(confirm('Reset all local demo data?')){localStorage.removeItem(KEY);location.reload()}}
-function toggleDark(){document.body.style.filter=document.body.style.filter?'':'invert(.92) hue-rotate(180deg)';toast('Preview theme toggled.')}
-function val(id){return document.getElementById(id)?.value?.trim()||''}
-document.getElementById('globalSearch').addEventListener('input',e=>{let q=e.target.value.toLowerCase();if(q.length<2)return;let s=db.students.find(s=>studentName(s).toLowerCase().includes(q)||s.id.toLowerCase().includes(q));let g=db.groups.find(g=>g.name.toLowerCase().includes(q));if(s){go('students');document.getElementById('studentClassFilter').value=s.classId;renderStudents();}else if(g){go('groups');document.getElementById('groupClassFilter').value=g.classId;renderGroups()}})
-function renderAll(){fillSelects();renderDashboard();renderClasses();renderStudents();renderGroups();renderRecognition();renderQuizzes();renderChallenges();renderAnalytics();renderParent();renderClassroom();if(document.getElementById('reportStudent'))document.getElementById('reportStudent').value=db.students[0]?.id||''}
-renderAll();
-</script>
-</body>
-</html>
+    const InitialState = {
+      currentUser: { role: 'teacher', authenticated: true },
+      settings: {
+        platformName: "Teacher Anwaar Al Farsi",
+        subtitle: "Student Recognition & Gamification Platform",
+        teacherName: "Teacher Anwaar Al Farsi",
+        schoolName: "High School Academy",
+        academicYear: "2026-2027",
+        soundEnabled: true,
+        volume: 0.5,
+        levels: [
+          { name: "Bronze", min: 0, max: 49, icon: "🥉", color: "text-amber-600" },
+          { name: "Silver", min: 50, max: 99, icon: "🥈", color: "text-slate-300" },
+          { name: "Gold", min: 100, max: 199, icon: "🥇", color: "text-yellow-400" },
+          { name: "Platinum", min: 200, max: 9999, icon: "🏆", color: "text-cyan-400" }
+        ],
+        badges: [
+          { id: "b1", name: "Participation Champion", description: "Earned 50+ participation points", icon: "⚡" },
+          { id: "b2", name: "Consistency Star", description: "Consistent positive performance", icon: "🌟" },
+          { id: "b3", name: "Team Player", description: "Contributed actively to group success", icon: "🤝" },
+          { id: "b4", name: "Quiz Master", description: "Scored 90%+ average in quizzes", icon: "🧠" }
+        ],
+        portalConfig: {
+          showPoints: true
