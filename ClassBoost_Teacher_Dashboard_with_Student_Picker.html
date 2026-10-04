@@ -4,30 +4,25 @@
 :root{--bg:#f4f6fb;--card:#fff;--ink:#182230;--muted:#687386;--line:#e5e9f2;--primary:#5b5ce2;--good:#13a36f;--bad:#df5868;--gold:#f2ad35;--shadow:0 12px 30px #17203a12}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Arial,sans-serif}.app{display:flex;min-height:100vh}.side{width:250px;background:#171c32;color:white;padding:22px;position:fixed;inset:0 auto 0 0}.brand{font-weight:900;font-size:21px;margin-bottom:6px}.sub{color:#aeb7cf;font-size:12px}.nav{margin-top:25px;display:grid;gap:7px}.nav button{background:transparent;color:#c9d0e2;text-align:left;border:0;padding:12px;border-radius:12px}.nav button.active,.nav button:hover{background:#ffffff16;color:#fff}.main{margin-left:250px;width:calc(100% - 250px);padding:25px}.top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:22px}.search{width:300px;max-width:45vw;padding:12px 15px;border:1px solid var(--line);border-radius:12px;background:white}.btn{border:1px solid var(--line);background:white;padding:10px 14px;border-radius:11px;font-weight:700}.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.danger{background:#fff0f2;color:var(--bad);border-color:#ffd4d9}.btn.dark{background:#20263f;color:#fff;border-color:#20263f}.grid{display:grid;gap:16px}.four{grid-template-columns:repeat(4,1fr)}.three{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:repeat(2,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.kpi{font-size:28px;font-weight:900;margin-top:6px}.muted{color:var(--muted)}.view{display:none}.view.active{display:block}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.list{display:grid;gap:9px}.item{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff}.pill{display:inline-block;padding:5px 9px;border-radius:99px;font-size:12px;font-weight:800;background:#eef0ff;color:var(--primary)}.field{display:grid;gap:6px;margin-bottom:12px}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px}.field textarea{min-height:90px;resize:vertical}.modal{position:fixed;inset:0;background:#11182e88;display:none;align-items:center;justify-content:center;padding:20px;z-index:30}.modal.open{display:flex}.modalbox{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{font-size:26px;background:none;border:0}.empty{text-align:center;padding:40px;color:var(--muted)}.classroom{background:#0e1428;color:#fff;min-height:100vh;margin:-25px;padding:25px}.classroom .card{background:#171e38;border-color:#29304b;color:#fff}.leaders{display:grid;gap:12px}.leader{display:grid;grid-template-columns:50px 1fr 100px;gap:12px;align-items:center;background:#171e38;padding:14px;border-radius:16px}.bar{height:10px;background:#2a3250;border-radius:99px;overflow:hidden;margin-top:8px}.bar span{display:block;height:100%;background:linear-gradient(90deg,#7b61ff,#f2ad35);border-radius:99px}.studentgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.studenttile{background:#171e38;border:1px solid #29304b;border-radius:15px;padding:14px}.points{font-size:22px;font-weight:900}.celebrate{position:fixed;inset:0;background:#0b1026cc;display:none;align-items:center;justify-content:center;z-index:50}.celebrate.show{display:flex}.celebratebox{text-align:center;background:#fff;color:#182230;border-radius:28px;padding:35px;width:min(430px,90%);animation:pop .35s}.big{font-size:80px}@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}.confetti i{position:absolute;width:9px;height:18px;animation:fall 1.9s linear forwards;top:-30px}@keyframes fall{to{transform:translate(var(--x),110vh) rotate(720deg);opacity:.2}}.sad{animation:shake .45s}@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}100%{transform:none}}.note{padding:13px;background:#fff9e8;border:1px solid #f7e4a8;border-radius:12px}.chartbar{display:grid;grid-template-columns:110px 1fr 50px;gap:10px;align-items:center;margin:12px 0}.chartbar .track{height:12px;background:#edf0f6;border-radius:99px;overflow:hidden}.chartbar .track span{height:100%;display:block;background:var(--primary)}.hideClassroom{display:none!important}
 @media(max-width:1000px){.side{width:210px}.main{margin-left:210px;width:calc(100% - 210px)}.four{grid-template-columns:repeat(2,1fr)}.studentgrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.side{position:static;width:100%;min-height:auto}.app{display:block}.main{margin:0;width:100%;padding:16px}.nav{display:flex;overflow:auto}.top{align-items:stretch;flex-direction:column}.search{max-width:none;width:100%}.three,.two,.four{grid-template-columns:1fr}.studentgrid{grid-template-columns:1fr}.leader{grid-template-columns:40px 1fr 70px}}
 @media print{.noPrint{display:none!important}.print-area{display:block!important}body{background:#fff}.idcards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.idcard{break-inside:avoid;border:2px solid #ddd;padding:20px;border-radius:18px;text-align:center;margin-bottom:18px}.qr{width:180px;height:180px;object-fit:contain;margin:auto}}
-</style></head>
+
+.idcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}.idcard{text-align:center}.qr{width:200px;height:200px;object-fit:contain;margin:10px auto;display:block}
+.sadbox{background:#eef1f8}#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:65;display:none}
+.owner{font-weight:900;color:#fff;font-size:14px;margin-top:6px;letter-spacing:.2px}
+#portal{display:none;min-height:100vh;background:linear-gradient(160deg,#171c32,#5b5ce2);padding:22px}.pcard{max-width:520px;margin:0 auto;background:#fff;border-radius:24px;padding:26px;box-shadow:var(--shadow)}.pcard h1{margin:6px 0}.pbig{font-size:46px;font-weight:900;color:var(--primary)}.prow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+@media print{.side,.top,.noPrint{display:none!important}.main{margin:0!important;width:100%!important;padding:0!important}.qr{width:200px;height:200px}}
+</style>
+<meta name="robots" content="noindex">
+</head>
 <body>
-<div class="app"><aside class="side"><div class="brand">🚀 ClassBoost</div><div class="sub">Teacher. Anwaar Alfarsi</div><div class="nav">
+<div class="app"><aside class="side"><div class="brand">🚀 ClassBoost</div><div class="owner">T. Anwaar Al Farsi</div><div class="nav">
 <button class="active" data-view="dashboard">🏠 Dashboard</button><button data-view="classes">🏫 Classes</button><button data-view="students">👩‍🎓 Students</button><button data-view="groups">👥 Groups</button><button data-view="recognition">⭐ Recognition</button><button data-view="picker">🎯 Student Picker</button><button data-view="quizzes">📝 Paper Quizzes</button><button data-view="notes">💬 Parent Notes</button><button data-view="analytics">📊 Analytics</button><button data-view="cards">🪪 Student ID Cards</button><button data-view="classroom">🖥️ Classroom Mode</button></div></aside>
-<main class="main"><div class="top"><div><h1 id="pageTitle" style="margin:0">Teacher Dashboard</h1><div class="muted">Student Recognition & Gamification Dashboard</div></div><div class="actions"><input class="search" id="search" placeholder="🔎 Search students..."><button class="btn dark" onclick="enterClassroom()">🖥️ Classroom Mode</button></div></div>
+<main class="main"><div class="top"><div><h1 id="pageTitle" style="margin:0">Teacher Dashboard</h1><div class="muted">Student Recognition & Gamification Dashboard</div></div><div class="actions"><button class="btn" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><input class="search" id="search" placeholder="🔎 Search students..."><button class="btn dark" onclick="enterClassroom()">🖥️ Classroom Mode</button></div></div>
 <section id="dashboard" class="view active"><div class="grid four"><div class="card"><span class="muted">Classes</span><div class="kpi" id="kClasses">0</div></div><div class="card"><span class="muted">Students</span><div class="kpi" id="kStudents">0</div></div><div class="card"><span class="muted">Recognition Points</span><div class="kpi" id="kPoints">0 ⭐</div></div><div class="card"><span class="muted">Groups</span><div class="kpi" id="kGroups">0</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><div class="row"><h2>Quick Actions</h2><div class="pill">Teacher only</div></div><div class="actions"><button class="btn primary" onclick="openModal('studentModal')">+ Student</button><button class="btn" onclick="openModal('classModal')">+ Class</button><button class="btn" onclick="openGroupReward()">⭐ Group Reward</button><button class="btn" onclick="openRecognition()">⭐ Give Points</button></div></div><div class="card"><h2>Recent Recognition</h2><div id="recent" class="list"></div></div></div></section>
 <section id="classes" class="view"><div class="row"><h2>Classes</h2><button class="btn primary" onclick="openModal('classModal')">+ Add Class</button></div><div id="classList" class="grid three" style="margin-top:16px"></div></section>
-<section id="students" class="view"><div class="row"><h2>Students</h2><div class="actions"><button class="btn" onclick="document.getElementById('csvInput').click()">📥 Import Excel/CSV</button><button class="btn" onclick="exportStudents()">📤 Export</button><button class="btn primary" onclick="openModal('studentModal')">+ Add Student</button></div></div><input id="csvInput" type="file" accept=".csv,.xlsx,.xls" hidden onchange="importFile(event)"><div id="studentList" class="list" style="margin-top:16px"></div></section>
-<section id="groups" class="view"><div class="row"><h2>Group Recognition</h2><div class="actions"><button class="btn" onclick="openGroupReward()">⭐ Reward Group</button></div></div><div id="groupClassFilterPanel" class="card" style="margin-top:16px;display:none">
-<div class="row">
-<div>
-<h3 style="margin:0">🏫 Select Class</h3>
-<div class="muted">Only groups from the selected class will be displayed. Maximum 10 groups.</div>
-</div>
-<button class="btn" onclick="clearGroupClassFilter()">Show All Groups</button>
-</div>
-<div class="field" style="margin-top:14px;margin-bottom:0">
-<label>Class</label>
-<select id="groupPageClass" onchange="filterGroupPageByClass()">
-<option value="">Select class first</option>
-</select>
-</div>
-</div>
-
+<section id="students" class="view"><div class="row"><h2>Students</h2><div class="actions"><button class="btn" onclick="openImport()">📥 Import Excel/CSV</button><button class="btn" onclick="exportStudents()">📤 Export</button><button class="btn primary" onclick="openModal('studentModal')">+ Add Student</button></div></div><div id="studentList" class="list" style="margin-top:16px"></div></section>
+<section id="groups" class="view"><div class="row"><h2>Group Recognition</h2><div class="actions"><button class="btn" onclick="openAddGroup()">+ Add Group</button><button class="btn primary" onclick="openGroupReward()">⭐ Add / Remove Group Points</button></div></div>
+<div class="card" style="margin-top:16px"><div class="row"><div><h3 style="margin:0">🏫 Select Class</h3><div class="muted">Choose a class first — only that class's groups are shown. Maximum 10 groups per class.</div></div><span class="pill" id="groupCount">0 / 10 groups</span></div>
+<div class="field" style="margin-top:14px;margin-bottom:0"><label>Class</label><select id="groupPageClass" onchange="filterGroupPageByClass()"><option value="">Select class first</option></select></div></div>
 <div id="groupList" class="grid three" style="margin-top:16px"></div></section>
 <section id="recognition" class="view"><div class="row"><h2>Recognition History</h2><button class="btn primary" onclick="openRecognition()">⭐ Give / Remove Points</button></div><div id="recognitionList" class="list" style="margin-top:16px"></div></section>
 <section id="picker" class="view">
@@ -59,26 +54,33 @@
 <section id="quizzes" class="view"><div class="row"><h2>Paper Quiz Records</h2><button class="btn primary" onclick="openQuiz()">+ Record Quiz</button></div><div class="card" style="margin-top:16px"><div class="muted">Quiz results are teacher-only and are never shown in Classroom Mode.</div><div id="quizList" class="list" style="margin-top:12px"></div></div></section>
 <section id="notes" class="view"><div class="row"><h2>Parent-Visible Teacher Notes</h2><select id="noteStudent" onchange="renderNote()" style="padding:10px;border:1px solid var(--line);border-radius:10px"></select></div><div id="notePanel" class="card" style="margin-top:16px"></div></section>
 <section id="analytics" class="view"><h2>Teacher Analytics</h2><div class="grid three"><div class="card"><span class="muted">Quiz Average</span><div class="kpi" id="aAvg">0%</div></div><div class="card"><span class="muted">Highest Recorded</span><div class="kpi" id="aHigh">0%</div></div><div class="card"><span class="muted">Attention Indicators</span><div class="kpi" id="aAttention">0</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>Quiz Performance</h3><div id="quizChart"></div></div><div class="card"><h3>Group Points</h3><div id="groupChart"></div></div></div></section>
-<section id="cards" class="view"><div class="row"><h2>Student ID Cards</h2><button class="btn primary" onclick="printCards()">🖨️ Export / Print PDF</button></div><div class="note" style="margin:15px 0">Each card has a student-specific QR link. Print this page and choose <b>Save as PDF</b>. Distribute one card to each student.</div><div id="cardsPreview" class="idcards"></div></section>
+<section id="cards" class="view"><div class="row noPrint"><h2>Student ID Cards</h2><div class="actions"><select id="cardsClass" onchange="renderCards()" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">All Classes</option></select><button class="btn primary" onclick="printCards()">🖨️ Export / Print PDF</button></div></div><div class="note noPrint" style="margin:15px 0"><label style="display:flex;gap:9px;align-items:flex-start;font-weight:700"><input id="qrResults" type="checkbox" checked onchange="renderCards()" style="margin-top:3px"><span>🔒 Show each student's private results inside their own QR code<br><span class="muted" style="font-weight:400">Scanning a card opens a private page with <b>only that student's</b> points, quiz scores and parent note. Other students' data is never included. Untick to make the QR show name/class only.</span></span></label></div><div id="cardsPreview" class="idcards"></div></section>
 <section id="classroom" class="view"><div class="classroom"><div class="row"><div><h2 style="margin:0">🖥️ Classroom Mode</h2><div style="color:#aeb7cf">Safe projection view — no quiz scores, grades, analytics or other private student data.</div></div><button class="btn" onclick="exitClassroom()">Exit Classroom Mode</button></div><div class="actions" style="margin:18px 0;align-items:center"><select id="classroomClass" onchange="renderClassroom()" style="padding:11px;border-radius:10px"><option value="">All Classes</option></select><button class="btn primary" id="classroomIndividualsBtn" onclick="showClassroomIndividuals()">👤 Show Individuals</button><button class="btn" id="classroomGroupsBtn" onclick="showClassroomGroups()">👥 Show Groups</button></div><div id="classroomGroupsPanel" class="card"><h3>👥 Group Leaderboard</h3><div id="classroomGroups" class="leaders"></div></div><div id="classroomIndividualsPanel" class="card" style="margin-top:16px;display:none"><div class="row"><div><h3 style="margin:0">⭐ Individual Students</h3><div id="classroomIndividualSubtitle" class="muted"></div></div></div><div id="classroomStudents" class="studentgrid" style="margin-top:14px"></div></div><div class="card" style="margin-top:16px"><h3>🎯 Class Goal</h3><div id="classGoal" class="kpi">0 / 500 ⭐</div><div class="bar"><span id="goalBar" style="width:0"></span></div></div></div></section>
 </main></div>
 <div class="modal" id="classModal"><div class="modalbox"><div class="modalhead"><h2>🏫 Add Class</h2><button class="close" onclick="closeModal('classModal')">×</button></div><div class="field"><label>Class Name</label><input id="className" placeholder="Grade 10A"></div><div class="field"><label>Grade / Level</label><input id="classGrade" placeholder="Grade 10"></div><div class="actions"><button class="btn" onclick="closeModal('classModal')">Cancel</button><button class="btn primary" onclick="addClass()">Create</button></div></div></div>
 <div class="modal" id="groupModal"><div class="modalbox"><div class="modalhead"><h2>👥 Add Group</h2><button class="close" onclick="closeModal('groupModal')">×</button></div><div class="field"><label>Group Name</label><input id="groupName" placeholder="Falcons"></div><div class="field"><label>Class</label><select id="groupClass"></select></div><div class="field"><label>Icon</label><input id="groupIcon" value="⭐"></div><div class="actions"><button class="btn" onclick="closeModal('groupModal')">Cancel</button><button class="btn primary" onclick="addGroup()">Create</button></div></div></div>
 <div class="modal" id="studentModal"><div class="modalbox"><div class="modalhead"><h2>👩‍🎓 Add Student</h2><button class="close" onclick="closeModal('studentModal')">×</button></div><div class="grid two"><div class="field"><label>First Name</label><input id="first"></div><div class="field"><label>Last Name</label><input id="last"></div></div><div class="grid two"><div class="field"><label>Student ID</label><input id="sid" placeholder="Auto-generated if blank"></div><div class="field"><label>Class</label><select id="studentClass"></select></div></div><div class="field"><label>Group</label><select id="studentGroup"></select></div><div class="field"><label>Parent / Guardian</label><input id="parent"></div><div class="actions"><button class="btn" onclick="closeModal('studentModal')">Cancel</button><button class="btn primary" onclick="addStudent()">Add Student</button></div></div></div>
 <div class="modal" id="groupRewardModal"><div class="modalbox">
-<div class="modalhead"><h2>⭐ Group Reward</h2><button class="close" onclick="closeModal('groupRewardModal')">×</button></div>
-<div class="note" style="margin-bottom:15px"><b>Class → Group → Student</b><br>Only groups and students from the selected class will appear.</div>
+<div class="modalhead"><h2>👥 Group Points</h2><button class="close" onclick="closeModal('groupRewardModal')">×</button></div>
+<div class="field"><label>Action</label><select id="groupRewardAction"><option value="award">⭐ Add Points</option><option value="remove">😢 Remove Points</option></select></div>
 <div class="field"><label>1️⃣ Class</label><select id="groupRewardClass" onchange="updateGroupRewardOptions()"><option value="">Select class first</option></select></div>
 <div class="field"><label>2️⃣ Group</label><select id="groupRewardGroup" onchange="updateGroupRewardStudents()"><option value="">Select a class first</option></select></div>
-<div class="field"><label>3️⃣ Student</label><select id="groupRewardStudent"><option value="">Select a class first</option></select><div class="muted">Choose a student for an individual reward, or choose Whole Group to reward everyone.</div></div>
+<div class="field"><label>3️⃣ Student</label><select id="groupRewardStudent"><option value="">Select a class first</option></select><div class="muted">Choose one student, or “Whole Group” to apply to every member.</div></div>
 <div class="grid two"><div class="field"><label>Points</label><input id="groupRewardPoints" type="number" min="1" value="5"></div><div class="field"><label>Reason</label><input id="groupRewardReason" placeholder="Great teamwork..."></div></div>
-<div class="actions"><button class="btn" onclick="closeModal('groupRewardModal')">Cancel</button><button class="btn primary" onclick="applyGroupReward()">⭐ Give Reward</button></div>
+<div class="actions"><button class="btn" onclick="closeModal('groupRewardModal')">Cancel</button><button class="btn primary" onclick="applyGroupReward()">Apply</button></div>
 </div></div>
 <div class="modal" id="recognitionModal"><div class="modalbox"><div class="modalhead"><h2>⭐ Recognition</h2><button class="close" onclick="closeModal('recognitionModal')">×</button></div><div class="field"><label>1. Class <span style="color:var(--bad)">*</span></label><select id="rClass" onchange="updateRecognitionFilters()"><option value="">Select class first</option></select></div><div class="field"><label>2. Group <span class="muted">(optional)</span></label><select id="rGroup" onchange="updateRecognitionStudents()" disabled><option value="">Select class first</option></select></div><div class="field"><label>3. Student <span style="color:var(--bad)">*</span></label><select id="rStudent" disabled><option value="">Select class first</option></select></div><div class="grid two"><div class="field"><label>Action</label><select id="rAction"><option value="award">⭐ Add Points</option><option value="remove">😔 Remove Points</option></select></div><div class="field"><label>Points</label><input id="rPoints" type="number" value="5" min="1"></div></div><div class="field"><label>Reason / Evidence</label><textarea id="rReason" placeholder="Great participation, teamwork..."></textarea></div><div class="actions"><button class="btn" onclick="closeModal('recognitionModal')">Cancel</button><button class="btn primary" onclick="applyPoints()">Apply</button></div></div></div>
-<div class="modal" id="groupRewardModal"><div class="modalbox"><div class="modalhead"><h2>👥 Group Reward</h2><button class="close" onclick="closeModal('groupRewardModal')">×</button></div><div class="field"><label>1. Class <span style="color:var(--bad)">*</span></label><select id="grClass" onchange="updateGroupRewardGroups()"><option value="">Select class first</option></select></div><div class="field"><label>2. Group <span style="color:var(--bad)">*</span></label><select id="grGroup" disabled><option value="">Select class first</option></select></div><div class="grid two"><div class="field"><label>Points</label><input id="grPoints" type="number" value="5" min="1"></div><div class="field"><label>Reason</label><input id="grReason" placeholder="Excellent teamwork..."></div></div><div class="note">💡 All students in the selected group will receive the reward.</div><div class="actions" style="margin-top:14px"><button class="btn" onclick="closeModal('groupRewardModal')">Cancel</button><button class="btn primary" onclick="applyGroupReward()">⭐ Give Group Reward</button></div></div></div>
-
 <div class="modal" id="quizModal"><div class="modalbox"><div class="modalhead"><h2>📝 Record Paper Quiz</h2><button class="close" onclick="closeModal('quizModal')">×</button></div><div class="grid two"><div class="field"><label>Quiz Name</label><input id="quizName" placeholder="Quiz 1"></div><div class="field"><label>Total Marks</label><input id="quizTotal" type="number" value="20"></div></div><div class="field"><label>Class</label><select id="quizClass"></select></div><div id="scoreFields"></div><div class="actions"><button class="btn" onclick="closeModal('quizModal')">Cancel</button><button class="btn primary" onclick="saveQuiz()">Save Quiz</button></div></div></div>
+<div class="modal" id="importModal"><div class="modalbox"><div class="modalhead"><h2>📥 Import Students</h2><button class="close" onclick="closeModal('importModal')">×</button></div>
+<div class="note" style="margin-bottom:14px">Upload an <b>.xlsx, .xls or .csv</b> file. Row 1 = headers. Recognised columns: <b>Student ID</b>, <b>First Name</b> + <b>Last Name</b> (or a single <b>Name</b> column), <b>Class</b>, <b>Group</b>. Missing classes/groups are created automatically. Arabic headers (الاسم، الصف، المجموعة) also work.</div>
+<div class="field"><label>Default class <span class="muted">(used when the file has no Class column or the cell is empty)</span></label><select id="importClass"></select></div>
+<div class="field"><label>File</label><input id="importFile" type="file" accept=".csv,.tsv,.txt,.xlsx,.xls"></div>
+<div id="importResult" class="muted" style="margin-bottom:12px"></div>
+<div class="actions"><button class="btn" onclick="downloadTemplate()">⬇️ Template</button><button class="btn" onclick="closeModal('importModal')">Close</button><button class="btn primary" onclick="runImport()">Import</button></div></div></div>
+<canvas id="fx"></canvas>
 <div class="celebrate" id="celebrate"><div class="celebratebox"><div id="celebrateEmoji" class="big">🎉</div><h2 id="celebrateTitle">Excellent!</h2><div id="celebrateText">+5 POINTS</div><button class="btn primary" style="margin-top:18px" onclick="hideCelebrate()">Continue</button></div></div><div id="toast" style="position:fixed;right:20px;bottom:20px;background:#182230;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:70"></div>
+<div id="portal"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const KEY='classboost_clean_v1';
 let db=(()=>{try{let d=JSON.parse(localStorage.getItem(KEY));return d&&Array.isArray(d.classes)?d:{classes:[],groups:[],students:[],transactions:[],quizzes:[]}}catch(e){return{classes:[],groups:[],students:[],transactions:[],quizzes:[]}}})();
@@ -87,9 +89,9 @@ function save(){localStorage.setItem(KEY,JSON.stringify(db))} function toast(m){
 function show(view){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(view).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('pageTitle').textContent=view==='classroom'?'Classroom Mode':view.charAt(0).toUpperCase()+view.slice(1);renderAll()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
 function openModal(id){fillSelects();$(id).classList.add('open')} function closeModal(id){$(id).classList.remove('open')}
-function fillSelects(){let c='<option value="">Select class</option>'+db.classes.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');['groupClass','studentClass','quizClass'].forEach(id=>$(id).innerHTML=c);let g='<option value="">No group</option>'+db.groups.map(x=>`<option value="${x.id}">${x.icon||'⭐'} ${x.name} · ${cls(x.classId)}</option>`).join('');$('studentGroup').innerHTML=g;let st=db.students.map(s=>`<option value="${s.id}">${name(s)} · ${cls(s.classId)}</option>`).join('');$('rStudent').innerHTML=st;let ns=$('noteStudent'),old=ns.value;ns.innerHTML=st;ns.value=old||db.students[0]?.id||'';let cc='<option value="">All Classes</option>'+db.classes.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');$('classroomClass').innerHTML=cc}
+function fillSelects(){let c='<option value="">Select class</option>'+db.classes.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');['groupClass','studentClass','quizClass'].forEach(id=>$(id).innerHTML=c);let g='<option value="">No group</option>'+db.groups.map(x=>`<option value="${x.id}">${x.icon||'⭐'} ${x.name} · ${cls(x.classId)}</option>`).join('');$('studentGroup').innerHTML=g;let st=db.students.map(s=>`<option value="${s.id}">${name(s)} · ${cls(s.classId)}</option>`).join('');let ns=$('noteStudent'),old=ns.value;ns.innerHTML=st;ns.value=old||db.students[0]?.id||'';let cc='<option value="">All Classes</option>'+db.classes.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');$('classroomClass').innerHTML=cc}
 function addClass(){let n=$('className').value.trim();if(!n)return toast('Enter a class name.');db.classes.push({id:uid('C'),name:n,grade:$('classGrade').value.trim()});save();closeModal('classModal');renderAll();toast('Class created.')}
-function addGroup(){let n=$('groupName').value.trim(),c=$('groupClass').value;if(!n||!c)return toast('Choose a class and group name.');db.groups.push({id:uid('G'),name:n,classId:c,icon:$('groupIcon').value||'⭐',points:0});save();closeModal('groupModal');renderAll();toast('Group created.')}
+function addGroup(){let n=$('groupName').value.trim(),c=$('groupClass').value;if(!n||!c)return toast('Choose a class and group name.');if(db.groups.filter(g=>g.classId===c).length>=10)return toast('Maximum 10 groups per class.');$('groupPageClass').value=c;db.groups.push({id:uid('G'),name:n,classId:c,icon:$('groupIcon').value||'⭐',points:0});save();closeModal('groupModal');renderAll();toast('Group created.')}
 function addStudent(){let f=$('first').value.trim(),l=$('last').value.trim(),c=$('studentClass').value;if(!f||!l||!c)return toast('First name, last name and class are required.');db.students.push({id:$('sid').value.trim()||uid('S'),first:f,last:l,classId:c,groupId:$('studentGroup').value,points:0,notes:[]});save();closeModal('studentModal');['first','last','sid','parent'].forEach(x=>$(x).value='');renderAll();toast('Student added.')}
 function updateRecognitionFilters(){
   const classId=$('rClass').value;
@@ -136,54 +138,46 @@ function openRecognition(){
   openModal('recognitionModal');
 }
 
-function updateGroupRewardGroups(){
-  const classId=$('grClass').value;
-  const select=$('grGroup');
-  if(!classId){
-    select.innerHTML='<option value="">Select class first</option>';
-    select.disabled=true;
-    return;
-  }
-  const groups=db.groups.filter(g=>g.classId===classId);
-  select.innerHTML='<option value="">Select group</option>'+groups.map(g=>`<option value="${g.id}">${g.icon||'⭐'} ${g.name} · ${db.students.filter(s=>s.groupId===g.id).length} students</option>`).join('');
-  select.disabled=groups.length===0;
-}
-
-function openGroupReward(){
-  $('grClass').innerHTML='<option value="">Select class first</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  $('grGroup').innerHTML='<option value="">Select class first</option>';
-  $('grGroup').disabled=true;
-  $('grPoints').value=5;
-  $('grReason').value='';
-  openModal('groupRewardModal');
-}
-
-function applyGroupReward(){
-  const classId=$('grClass').value;
-  const groupId=$('grGroup').value;
-  const p=Math.max(1,+$('grPoints').value||0);
-  const g=grp(groupId);
-
-  if(!classId) return toast('Choose the class first.');
-  if(!groupId||!g||g.classId!==classId) return toast('Choose a group from the selected class.');
-
-  const members=db.students.filter(s=>s.groupId===groupId&&s.classId===classId);
-  if(!members.length) return toast('This group has no students in the selected class.');
-
-  g.points+=p;
-  members.forEach(s=>s.points+=p);
-  db.transactions.unshift({id:uid('T'),studentId:members[0].id,points:p,reason:$('grReason').value||'Group award: '+g.name,date:new Date().toLocaleString()});
-  save();
-  closeModal('groupRewardModal');
-  celebrate(false,p,{first:g.name,last:''});
-  renderAll();
-}
-
 function applyPoints(){let s=db.students.find(x=>x.id===$('rStudent').value),p=Math.max(1,+$('rPoints').value||0),remove=$('rAction').value==='remove';if(!s)return toast('Add a student first.');let actual=remove?Math.min(p,s.points):p;s.points+=remove?-actual:actual;let g=grp(s.groupId);if(g)g.points+=remove?-actual:actual;db.transactions.unshift({id:uid('T'),studentId:s.id,points:remove?-actual:actual,reason:$('rReason').value,date:new Date().toLocaleString()});save();closeModal('recognitionModal');celebrate(remove,actual,s);renderAll()}
-function celebrate(remove,p,s){$('celebrateEmoji').textContent=remove?'😔':'🎉';$('celebrateTitle').textContent=remove?'Points Removed':'Excellent Work!';$('celebrateText').textContent=(remove?'-':'+')+p+' POINTS · '+name(s);$('celebrate').classList.add('show');if(!remove)confetti();beep(remove)} function hideCelebrate(){$('celebrate').classList.remove('show')}
-function beep(sad){try{let C=AudioContext||webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=sad?220:660;g.gain.value=.08;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.3)}catch(e){}}
+
+let soundOn=(()=>{try{return localStorage.getItem('cb_sound')!=='0'}catch(e){return true}})(),AC=null,celTimer=null,fxRunning=false;
+function ac(){if(!soundOn)return null;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}catch(e){return null}}
+function updSoundBtn(){$('soundBtn').textContent=soundOn?'🔊 Sound':'🔇 Muted'}
+function toggleSound(){soundOn=!soundOn;try{localStorage.setItem('cb_sound',soundOn?'1':'0')}catch(e){}updSoundBtn();if(soundOn){ac();beep(false)}toast(soundOn?'🔊 Sound on':'🔇 Sound off')}
+function tone(f,t,d,type,v,to){const c=AC,o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);g.gain.setValueAtTime(v||.1,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.02)}
+function noiseBurst(t,d,freq,q,vol,type){const c=AC,n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=freq;f.Q.value=q||.8;const g=c.createGain();g.gain.value=vol;s.connect(f);f.connect(g);g.connect(c.destination);s.start(t)}
+function applause(sec,dens){const c=ac();if(!c)return;const t=c.currentTime;for(let i=0;i<dens;i++)noiseBurst(t+Math.random()*sec,.09+Math.random()*.05,1000+Math.random()*2500,.9,.35+Math.random()*.4)}
+function popSound(){const c=ac();if(!c)return;const t=c.currentTime;noiseBurst(t,.35,300,.5,.6,'lowpass');tone(120,t,.25,'sine',.22,40)}
+function winSound(){const c=ac();if(!c)return;const t=c.currentTime;[523,659,784,1047].forEach((f,i)=>tone(f,t+i*.11,.3,'triangle',.14));applause(2.4,70)}
+function sadSound(){const c=ac();if(!c)return;const t=c.currentTime;[[392,0],[370,.42],[349,.84]].forEach(([f,d])=>tone(f,t+d,.4,'triangle',.16,f*.92));tone(311,t+1.26,1.1,'triangle',.18,208)}
+function beep(sad){if(sad){sadSound();return}const c=ac();if(!c)return;const t=c.currentTime;tone(660,t,.15,'triangle',.1);tone(880,t+.1,.2,'triangle',.1)}
+function quickFeedback(remove){if(remove){sadSound();toast('😢 Point removed')}else{const c=ac();if(c){const t=c.currentTime;tone(784,t,.15,'triangle',.12);applause(.7,18)}confetti();toast('👏 +1 point!')}}
+function celebrate(remove,p,s){
+  $('celebrateEmoji').textContent=remove?'😢':'🎉';
+  $('celebrateTitle').textContent=remove?'Points Removed':'Excellent Work!';
+  $('celebrateText').textContent=(remove?'−':'+')+p+' POINTS · '+name(s).trim();
+  const box=document.querySelector('.celebratebox');box.classList.toggle('sadbox',!!remove);
+  $('celebrate').classList.add('show');
+  if(remove){sadSound();sadRain();box.classList.remove('sad');void box.offsetWidth;box.classList.add('sad')}
+  else{winSound();confetti();fireworks()}
+  clearTimeout(celTimer);celTimer=setTimeout(hideCelebrate,4500)}
+function hideCelebrate(){$('celebrate').classList.remove('show')}
 function confetti(){let layer=document.createElement('div');layer.className='confetti';for(let i=0;i<80;i++){let x=document.createElement('i');x.style.left=Math.random()*100+'%';x.style.setProperty('--x',(Math.random()*220-110)+'px');x.style.background=`hsl(${Math.random()*360},90%,60%)`;x.style.animationDelay=Math.random()*.35+'s';layer.appendChild(x)}document.body.appendChild(layer);setTimeout(()=>layer.remove(),2100)}
-function openRecognition(){fillSelects();openModal('recognitionModal')}
+function sadRain(){let layer=document.createElement('div');layer.className='confetti';for(let i=0;i<16;i++){let x=document.createElement('i');x.textContent='😢';x.style.cssText=`left:${Math.random()*100}%;width:auto;height:auto;font-size:${24+Math.random()*20}px;animation-delay:${Math.random()*.8}s;animation-duration:2.6s`;x.style.setProperty('--x',(Math.random()*60-30)+'px');layer.appendChild(x)}document.body.appendChild(layer);setTimeout(()=>layer.remove(),3600)}
+function fireworks(ms){
+  if(fxRunning)return;fxRunning=true;ms=ms||3400;
+  const cv=$('fx'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;cv.style.display='block';
+  let parts=[],end=performance.now()+ms,nextBurst=0;
+  function burst(x,y){const hue=Math.random()*360;for(let i=0;i<70;i++){const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*5;parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,hue:hue+Math.random()*40,r:2+Math.random()*2})}popSound()}
+  function frame(t){
+    ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(0,0,cv.width,cv.height);ctx.globalCompositeOperation='lighter';
+    if(t<end-700&&t>=nextBurst){burst(cv.width*(.15+Math.random()*.7),cv.height*(.12+Math.random()*.4));nextBurst=t+320+Math.random()*350}
+    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.vx*=.985;p.life-=.012;ctx.beginPath();ctx.fillStyle=`hsla(${p.hue},100%,60%,${Math.max(p.life,0)})`;ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()});
+    parts=parts.filter(p=>p.life>0);
+    if(t<end||parts.length)requestAnimationFrame(frame);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';fxRunning=false}
+  }
+  requestAnimationFrame(frame)}
+
 function openQuiz(){fillSelects();$('scoreFields').innerHTML=db.students.map(s=>`<div class="grid two" style="align-items:end"><div class="field"><label>${name(s)} · ${cls(s.classId)}</label><input type="number" min="0" class="score" data-id="${s.id}" placeholder="Score"></div></div>`).join('')||'<div class="empty">Add students before recording quiz scores.</div>';openModal('quizModal')}
 function saveQuiz(){let c=$('quizClass').value,total=+$('quizTotal').value||0;if(!c||!total)return toast('Choose a class and total marks.');let scores=[...document.querySelectorAll('.score')].map(i=>({studentId:i.dataset.id,score:+i.value||0,pct:Math.round((+i.value||0)/total*100)})).filter(x=>db.students.find(s=>s.id===x.studentId)?.classId===c);db.quizzes.push({id:uid('Q'),name:$('quizName').value||'Paper Quiz',total,classId:c,scores,date:new Date().toLocaleDateString()});save();closeModal('quizModal');renderAll();toast('Paper quiz recorded.')}
 function addNote(){let s=db.students.find(x=>x.id===$('noteStudent').value);let text=prompt('Enter a parent-visible teacher note:',s?.notes?.[0]||'');if(text===null)return;s.notes=[text];save();renderNote();toast('Parent note saved.')}
@@ -252,80 +246,51 @@ function resetPickerHistory(){
   toast('Picker history reset.');
 }
 
-function renderAll(){fillSelects();$('kClasses').textContent=db.classes.length;$('kStudents').textContent=db.students.length;$('kGroups').textContent=db.groups.length;$('kPoints').textContent=db.students.reduce((a,s)=>a+s.points,0)+' ⭐';renderClasses();renderStudents();renderGroups();renderRecognition();renderQuizzes();renderRecent();renderAnalytics();renderCards();renderNote();renderClassroom();renderPickerStudents()}
+function renderAll(){fillSelects();$('kClasses').textContent=db.classes.length;$('kStudents').textContent=db.students.length;$('kGroups').textContent=db.groups.length;$('kPoints').textContent=db.students.reduce((a,s)=>a+s.points,0)+' ⭐';renderClasses();renderStudents();renderGroups();renderRecognition();renderQuizzes();renderRecent();renderAnalytics();if($('cards').classList.contains('active'))renderCards();renderNote();renderClassroom();renderPickerStudents()}
 function renderClasses(){$('classList').innerHTML=db.classes.map(c=>`<div class="card"><div class="pill">${c.grade||'Class'}</div><h2>${c.name}</h2><p class="muted">${db.students.filter(s=>s.classId===c.id).length} students · ${db.groups.filter(g=>g.classId===c.id).length} groups</p><button class="btn danger" onclick="deleteClass('${c.id}')">Delete</button></div>`).join('')||'<div class="empty">No classes yet. Add your first class.</div>'}
 function deleteClass(id){if(!confirm('Delete this class and its groups? Students will remain but become unassigned.'))return;db.classes=db.classes.filter(c=>c.id!==id);db.groups=db.groups.filter(g=>g.classId!==id);db.students.forEach(s=>{if(s.classId===id){s.classId='';s.groupId=''}});save();renderAll()}
 function renderStudents(){let q=($('search').value||'').toLowerCase();let a=db.students.filter(s=>(name(s)+' '+cls(s.classId)).toLowerCase().includes(q));$('studentList').innerHTML=a.map(s=>`<div class="item row"><div><b>${name(s)}</b><div class="muted">${cls(s.classId)} · ${grp(s.groupId)?.name||'No group'} · ID: ${s.id}</div></div><div class="actions"><b>${s.points} ⭐</b><button class="btn" onclick="openStudent('${s.id}')">View</button><button class="btn danger" onclick="deleteStudent('${s.id}')">Delete</button></div></div>`).join('')||'<div class="empty">No students yet.</div>'}
 function deleteStudent(id){if(!confirm('Delete this student?'))return;db.students=db.students.filter(s=>s.id!==id);db.transactions=db.transactions.filter(t=>t.studentId!==id);db.quizzes.forEach(q=>q.scores=q.scores.filter(x=>x.studentId!==id));save();renderAll()}
 function openStudent(id){let s=db.students.find(x=>x.id===id);alert(`${name(s)}\n\nClass: ${cls(s.classId)}\nGroup: ${grp(s.groupId)?.name||'No group'}\nRecognition: ${s.points} points\nQuiz results: ${db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===id).map(x=>q.name+': '+x.score+'/'+q.total+' ('+x.pct+'%)')).join('\n')||'None'}\n\nParent note: ${s.notes?.[0]||'None'}`)}
 
-function openGroupClassSelector(){
-  let select = $('groupPageClass');
-
-  select.innerHTML =
-    '<option value="">Select class first</option>' +
-    db.classes.map(c =>
-      `<option value="${c.id}">${c.name}</option>`
-    ).join('');
-
-  $('groupClassFilterPanel').style.display = 'block';
-}
-
-function filterGroupPageByClass(){
-  let classId = $('groupPageClass').value;
-
-  if(!classId){
-    renderGroups();
-    return;
-  }
-
-  renderGroups(classId);
-}
-
-function clearGroupClassFilter(){
-  $('groupPageClass').value = '';
-  $('groupClassFilterPanel').style.display = 'none';
-  renderGroups();
-}
-
-function renderGroups(){$('groupList').innerHTML=db.groups.slice().sort((a,b)=>b.points-a.points).map((g,i)=>`<div class="card"><div class="row"><span style="font-size:34px">${g.icon||'⭐'}</span><span class="pill">#${i+1}</span></div><h2>${g.name}</h2><div class="muted">${cls(g.classId)} · ${db.students.filter(s=>s.groupId===g.id).length} members</div><div class="kpi">${g.points} ⭐</div><div class="actions"><button class="btn primary" onclick="groupPoints('${g.id}')">+ Group Points</button><button class="btn danger" onclick="deleteGroup('${g.id}')">Delete</button></div></div>`).join('')||'<div class="empty">No groups yet.</div>'}
-function openGroupReward(){
-  fillGroupRewardSelects();
-  $('groupRewardModal').classList.add('open');
-}
-function fillGroupRewardSelects(){
+function filterGroupPageByClass(){renderGroups()}
+function openAddGroup(){fillSelects();const c=$('groupPageClass').value;if(c)$('groupClass').value=c;$('groupName').value='';$('groupModal').classList.add('open')}
+function renderGroups(){
+  const sel=$('groupPageClass'),old=sel.value;
+  sel.innerHTML='<option value="">Select class first</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  sel.value=db.classes.some(c=>c.id===old)?old:'';
+  const cid=sel.value;
+  if(!cid){$('groupCount').textContent='0 / 10 groups';$('groupList').innerHTML='<div class="empty" style="grid-column:1/-1">🏫 Choose a class above to see its groups.</div>';return}
+  const gs=db.groups.filter(g=>g.classId===cid).sort((a,b)=>b.points-a.points);
+  $('groupCount').textContent=gs.length+' / 10 groups';
+  $('groupList').innerHTML=gs.map((g,i)=>{const m=db.students.filter(s=>s.groupId===g.id);return `<div class="card"><div class="row"><span style="font-size:34px">${g.icon||'⭐'}</span><span class="pill">#${i+1}</span></div><h2>${g.name}</h2><div class="muted">${m.length} members${m.length?': '+m.slice(0,4).map(s=>s.first).join(', ')+(m.length>4?'…':''):''}</div><div class="kpi">${g.points} ⭐</div><div class="actions" style="margin-top:10px"><button class="btn primary" onclick="openGroupReward('${g.id}','award')">＋ Add Points</button><button class="btn danger" onclick="openGroupReward('${g.id}','remove')">－ Remove Points</button><button class="btn" title="Delete group" onclick="deleteGroup('${g.id}')">🗑</button></div></div>`}).join('')||'<div class="empty" style="grid-column:1/-1">No groups in this class yet. Click “+ Add Group”.</div>'}
+function openGroupReward(groupId,action){
   $('groupRewardClass').innerHTML='<option value="">Select class first</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   $('groupRewardGroup').innerHTML='<option value="">Select a class first</option>';
   $('groupRewardStudent').innerHTML='<option value="">Select a class first</option>';
-}
+  $('groupRewardAction').value=action==='remove'?'remove':'award';
+  $('groupRewardPoints').value=5;$('groupRewardReason').value='';
+  const g=typeof groupId==='string'?grp(groupId):null;
+  const cid=g?g.classId:$('groupPageClass').value;
+  if(cid){$('groupRewardClass').value=cid;updateGroupRewardOptions();if(g){$('groupRewardGroup').value=g.id;updateGroupRewardStudents()}}
+  $('groupRewardModal').classList.add('open')}
 function updateGroupRewardOptions(){
   const classId=$('groupRewardClass').value;
-  if(!classId){
-    $('groupRewardGroup').innerHTML='<option value="">Select a class first</option>';
-    $('groupRewardStudent').innerHTML='<option value="">Select a class first</option>';
-    return;
-  }
+  if(!classId){$('groupRewardGroup').innerHTML='<option value="">Select a class first</option>';$('groupRewardStudent').innerHTML='<option value="">Select a class first</option>';return}
   const groups=db.groups.filter(g=>g.classId===classId);
   $('groupRewardGroup').innerHTML='<option value="">Select group</option>'+groups.map(g=>`<option value="${g.id}">${g.icon||'⭐'} ${g.name}</option>`).join('');
-  $('groupRewardStudent').innerHTML='<option value="">Select a group first</option>';
-}
+  $('groupRewardStudent').innerHTML='<option value="">Select a group first</option>'}
 function updateGroupRewardStudents(){
-  const classId=$('groupRewardClass').value;
-  const groupId=$('groupRewardGroup').value;
+  const classId=$('groupRewardClass').value,groupId=$('groupRewardGroup').value;
   if(!classId)return;
-  if(!groupId){
-    $('groupRewardStudent').innerHTML='<option value="">Select a group first</option>';
-    return;
-  }
+  if(!groupId){$('groupRewardStudent').innerHTML='<option value="">Select a group first</option>';return}
   const students=db.students.filter(s=>s.classId===classId&&s.groupId===groupId);
-  $('groupRewardStudent').innerHTML='<option value="">Whole Group</option>'+students.map(s=>`<option value="${s.id}">${name(s)}</option>`).join('');
-}
+  $('groupRewardStudent').innerHTML='<option value="">Whole Group</option>'+students.map(s=>`<option value="${s.id}">${name(s)}</option>`).join('')}
 function applyGroupReward(){
-  const classId=$('groupRewardClass').value;
-  const groupId=$('groupRewardGroup').value;
-  const studentId=$('groupRewardStudent').value;
-  const points=Math.max(1,+$('groupRewardPoints').value||0);
-  const reason=$('groupRewardReason').value.trim()||'Group reward';
+  const classId=$('groupRewardClass').value,groupId=$('groupRewardGroup').value,studentId=$('groupRewardStudent').value;
+  const remove=$('groupRewardAction').value==='remove';
+  const points=Math.max(1,Math.floor(+$('groupRewardPoints').value)||0);
+  const reason=$('groupRewardReason').value.trim();
   if(!classId)return toast('Please select a class first.');
   if(!groupId)return toast('Please select a group.');
   const g=grp(groupId);
@@ -333,31 +298,104 @@ function applyGroupReward(){
   const students=db.students.filter(s=>s.classId===classId&&s.groupId===groupId);
   if(!students.length)return toast('This group has no students.');
   if(studentId){
-    const s=students.find(x=>x.id===studentId);
-    if(!s)return toast('Invalid student.');
-    s.points+=points;
-    g.points+=points;
-    db.transactions.unshift({id:uid('T'),studentId:s.id,points,reason,date:new Date().toLocaleString()});
-    save();closeModal('groupRewardModal');celebrate(false,points,s);renderAll();return;
-  }
-  g.points+=points;
-  students.forEach(s=>s.points+=points);
-  db.transactions.unshift({id:uid('T'),studentId:students[0].id,points,reason:'Whole group: '+reason,date:new Date().toLocaleString()});
-  save();closeModal('groupRewardModal');celebrate(false,points,{first:g.name,last:''});renderAll();
-}
+    const s=students.find(x=>x.id===studentId);if(!s)return toast('Invalid student.');
+    const actual=remove?Math.min(points,s.points):points;
+    if(!actual)return toast('This student has 0 points.');
+    const d=remove?-actual:actual;s.points+=d;g.points=Math.max(0,g.points+d);
+    db.transactions.unshift({id:uid('T'),studentId:s.id,points:d,reason:reason||(remove?'Group member: points removed':'Group member reward'),date:new Date().toLocaleString()});
+    save();closeModal('groupRewardModal');celebrate(remove,actual,s);renderAll();return}
+  if(remove&&!students.some(s=>s.points>0)&&g.points<=0)return toast('This group has no points to remove.');
+  students.forEach(s=>{s.points=Math.max(0,s.points+(remove?-points:points))});
+  g.points=Math.max(0,g.points+(remove?-points:points));
+  db.transactions.unshift({id:uid('T'),studentId:'',groupId:g.id,groupName:g.name,points:remove?-points:points,reason:reason||(remove?'Whole group: points removed':'Whole group reward'),date:new Date().toLocaleString()});
+  save();closeModal('groupRewardModal');celebrate(remove,points,{first:g.name,last:''});renderAll()}
 function deleteGroup(id){if(!confirm('Delete this group? Students will become unassigned.'))return;db.groups=db.groups.filter(g=>g.id!==id);db.students.forEach(s=>{if(s.groupId===id)s.groupId=''});save();renderAll()}
-function renderRecognition(){$('recognitionList').innerHTML=db.transactions.slice(0,50).map(t=>{let s=db.students.find(x=>x.id===t.studentId);return `<div class="item row"><div><b>${s?name(s):'Group award'}</b><div class="muted">${t.date} · ${t.reason||'Recognition'}</div></div><b style="color:${t.points<0?'var(--bad)':'var(--good)'}">${t.points>0?'+':''}${t.points} ⭐</b></div>`}).join('')||'<div class="empty">No recognition activity yet.</div>'}
-function renderRecent(){$('recent').innerHTML=db.transactions.slice(0,5).map(t=>{let s=db.students.find(x=>x.id===t.studentId);return `<div class="item"><b>${s?name(s):'Group'}</b> · ${t.points>0?'+':''}${t.points} ⭐</div>`}).join('')||'<div class="empty">No activity yet.</div>'}
+function renderRecognition(){$('recognitionList').innerHTML=db.transactions.slice(0,50).map(t=>{let s=db.students.find(x=>x.id===t.studentId);return `<div class="item row"><div><b>${t.groupName?'👥 '+t.groupName:(s?name(s):'Deleted student')}</b><div class="muted">${t.date} · ${t.reason||'Recognition'}</div></div><b style="color:${t.points<0?'var(--bad)':'var(--good)'}">${t.points>0?'+':''}${t.points} ⭐</b></div>`}).join('')||'<div class="empty">No recognition activity yet.</div>'}
+function renderRecent(){$('recent').innerHTML=db.transactions.slice(0,5).map(t=>{let s=db.students.find(x=>x.id===t.studentId);return `<div class="item"><b>${t.groupName?'👥 '+t.groupName:(s?name(s):'Deleted student')}</b> · ${t.points>0?'+':''}${t.points} ⭐</div>`}).join('')||'<div class="empty">No activity yet.</div>'}
 function renderQuizzes(){$('quizList').innerHTML=db.quizzes.map(q=>`<div class="item"><b>${q.name}</b> · ${cls(q.classId)} · ${q.date}<div class="muted">${q.scores.length} scores recorded · average ${q.scores.length?Math.round(q.scores.reduce((a,x)=>a+x.pct,0)/q.scores.length):0}%</div></div>`).join('')||'<div class="empty">No paper quizzes recorded.</div>'}
 function renderAnalytics(){let all=db.quizzes.flatMap(q=>q.scores.map(x=>x.pct));$('aAvg').textContent=(all.length?Math.round(all.reduce((a,b)=>a+b,0)/all.length):0)+'%';$('aHigh').textContent=(all.length?Math.max(...all):0)+'%';$('aAttention').textContent=db.students.filter(s=>{let a=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>x.pct));return a.length&&a.reduce((x,y)=>x+y,0)/a.length<70}).length;let qs=db.quizzes.slice(-6);$('quizChart').innerHTML=qs.map(q=>{let a=q.scores.length?Math.round(q.scores.reduce((x,y)=>x+y.pct,0)/q.scores.length):0;return `<div class="chartbar"><span>${q.name}</span><div class="track"><span style="width:${a}%"></span></div><b>${a}%</b></div>`}).join('')||'<div class="empty">Record quizzes to see the chart.</div>';let gs=db.groups.slice().sort((a,b)=>b.points-a.points).slice(0,8),mx=Math.max(...gs.map(g=>g.points),1);$('groupChart').innerHTML=gs.map(g=>`<div class="chartbar"><span>${g.name}</span><div class="track"><span style="width:${g.points/mx*100}%"></span></div><b>${g.points}</b></div>`).join('')||'<div class="empty">Add groups to see group performance.</div>'}
-function renderCards(){let base=location.href.split('#')[0];$('cardsPreview').innerHTML=db.students.map(s=>`<div class="idcard card"><div class="muted">🚀 ClassBoost · Student ID</div><h2>${name(s)}</h2><div>${cls(s.classId)} · ${grp(s.groupId)?.name||'No group'}</div><img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(base+'#student='+s.id)}" alt="Student QR"><div class="muted">Student ID: <b>${s.id}</b></div><small>Private student portal link</small></div>`).join('')||'<div class="empty">Add students to generate ID cards.</div>'}
-function printCards(){if(!db.students.length)return toast('Add students first.');show('cards');setTimeout(()=>window.print(),300)}
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cutS=(v,n)=>String(v||'').slice(0,n);
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function dec(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return JSON.parse(decodeURIComponent(escape(atob(t))))}
+function studentPayload(s,withResults){
+  const o={n:name(s).trim(),i:s.id,c:cls(s.classId),g:grp(s.groupId)?.name||''};
+  if(withResults){
+    o.p=s.points;
+    o.q=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>[cutS(q.name,24),x.score,q.total,x.pct,q.date])).slice(-8);
+    o.t=db.transactions.filter(t=>t.studentId===s.id).slice(0,5).map(t=>[t.points,cutS(t.reason,40),String(t.date).split(',')[0]]);
+    o.note=cutS(s.notes?.[0],200);o.d=new Date().toLocaleDateString();
+  }
+  return o}
+function renderCards(){
+  const sel=$('cardsClass'),old=sel.value;
+  sel.innerHTML='<option value="">All Classes</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  sel.value=db.classes.some(c=>c.id===old)?old:'';
+  const withRes=$('qrResults').checked,base=location.href.split('#')[0];
+  const list=db.students.filter(s=>!sel.value||s.classId===sel.value);
+  $('cardsPreview').innerHTML=list.map(s=>{const url=base+'#s='+enc(studentPayload(s,withRes));return `<div class="idcard card"><div class="muted">🚀 ClassBoost · Student ID</div><h2>${esc(name(s))}</h2><div>${esc(cls(s.classId))} · ${esc(grp(s.groupId)?.name||'No group')}</div><img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=L&margin=4&data=${encodeURIComponent(url)}" alt="Student QR"><div class="muted">Student ID: <b>${esc(s.id)}</b></div><small>🔒 Scan to see <b>your own</b> results only</small><div style="margin-top:8px;font-size:11px"><b>T. Anwaar Al Farsi</b></div></div>`}).join('')||'<div class="empty">Add students to generate ID cards.</div>'}
+function printCards(){if(!db.students.length)return toast('Add students first.');show('cards');setTimeout(()=>{const imgs=[...document.querySelectorAll('#cardsPreview img')];const wait=Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r})));Promise.race([wait,new Promise(r=>setTimeout(r,6000))]).then(()=>window.print())},200)}
+function openPortal(){
+  const m=location.hash.match(/^#s=([^&]+)/);if(!m)return false;
+  let o;try{o=dec(m[1])}catch(e){return false}
+  if(!o||!o.n)return false;
+  document.querySelector('.app').style.display='none';
+  let h=`<div class="pcard"><div class="muted">🚀 ClassBoost · Student Portal</div><h1>${esc(o.n)}</h1><div class="muted">${esc(o.c)}${o.g?' · '+esc(o.g):''} · ID ${esc(o.i)}</div>`;
+  if(o.p===undefined){h+='<div class="note" style="margin-top:16px">Your teacher has not enabled results on this card.</div>'}
+  else{
+    h+=`<div style="margin-top:18px" class="muted">Recognition points</div><div class="pbig">${esc(o.p)} ⭐</div>`;
+    h+='<h3>📝 Quiz results</h3>'+((o.q||[]).map(q=>`<div class="prow"><span>${esc(q[0])} <span class="muted">· ${esc(q[4])}</span></span><b>${esc(q[1])}/${esc(q[2])} (${esc(q[3])}%)</b></div>`).join('')||'<div class="muted">No quiz results yet.</div>');
+    h+='<h3>⭐ Recent recognition</h3>'+((o.t||[]).map(t=>`<div class="prow"><span>${esc(t[1]||'Recognition')} <span class="muted">· ${esc(t[2])}</span></span><b style="color:${t[0]<0?'var(--bad)':'var(--good)'}">${t[0]>0?'+':''}${esc(t[0])}</b></div>`).join('')||'<div class="muted">No activity yet.</div>');
+    h+=`<h3>💬 Teacher note</h3><div class="note">${esc(o.note)||'No note yet.'}</div><div class="muted" style="margin-top:12px;font-size:12px">Updated: ${esc(o.d||'')}</div>`}
+  h+='<div class="muted" style="margin-top:18px;font-size:12px">🔒 This page shows only your own information.</div><div style="margin-top:6px"><b>T. Anwaar Al Farsi</b></div></div>';
+  $('portal').innerHTML=h;$('portal').style.display='block';document.title='ClassBoost — '+o.n;return true}
 function renderClassroom(){let cid=$('classroomClass').value,students=db.students.filter(s=>!cid||s.classId===cid),groups=db.groups.filter(g=>!cid||g.classId===cid).sort((a,b)=>b.points-a.points),mx=Math.max(...groups.map(g=>g.points),1);$('classroomGroups').innerHTML=groups.map((g,i)=>`<div class="leader"><div style="font-size:28px">${i<3?['🥇','🥈','🥉'][i]:g.icon||'⭐'}</div><div><b>${g.name}</b><div class="bar"><span style="width:${g.points/mx*100}%"></span></div></div><div class="points">${g.points} ⭐</div></div>`).join('')||'<div class="empty">Add groups to display the group leaderboard.</div>';$('classroomStudents').innerHTML=students.slice().sort((a,b)=>b.points-a.points).map((s,i)=>`<div class="studenttile"><div class="row"><div><b>${i<3?['🥇 ','🥈 ','🥉 '][i]:''}${name(s)}</b><div style="color:#aeb7cf">${grp(s.groupId)?.icon||''} ${grp(s.groupId)?.name||'No group'}</div></div><div class="points">${s.points} ⭐</div></div><div class="actions" style="margin-top:12px"><button class="btn primary" onclick="classroomAddPoint('${s.id}',1)">+1 ⭐</button><button class="btn danger" onclick="classroomAddPoint('${s.id}',-1)">−1 ⭐</button></div></div>`).join('')||'<div class="empty">No students in this class.</div>';let total=students.reduce((a,s)=>a+s.points,0);$('classGoal').textContent=total+' / 500 ⭐';$('goalBar').style.width=Math.min(100,total/5)+'%';if(cid){$('classroomIndividualsBtn').textContent='👤 Show Individuals';$('classroomGroupsBtn').textContent='👥 Show Groups';}else{$('classroomIndividualsBtn').textContent='👤 Show All Individuals';$('classroomGroupsBtn').textContent='👥 Show Groups';}}
 function showClassroomIndividuals(){let cid=$('classroomClass').value;if(!cid)return toast('Please select a class first.');let c=db.classes.find(x=>x.id===cid);$('classroomIndividualsPanel').style.display='block';$('classroomGroupsPanel').style.display='none';$('classroomIndividualSubtitle').textContent=c?c.name+' · '+db.students.filter(s=>s.classId===cid).length+' students':'';}
 function showClassroomGroups(){$('classroomIndividualsPanel').style.display='none';$('classroomGroupsPanel').style.display='block';}
-function classroomAddPoint(studentId,delta){let s=db.students.find(x=>x.id===studentId);if(!s)return;let actual=delta<0?Math.min(1,s.points):1;if(delta<0&&actual===0)return toast('This student has 0 points.');s.points+=delta<0?-actual:actual;let g=grp(s.groupId);if(g)g.points+=delta<0?-actual:actual;db.transactions.unshift({id:uid('T'),studentId:s.id,points:delta<0?-actual:actual,reason:delta<0?'Classroom: point removed':'Classroom: point added',date:new Date().toLocaleString()});save();beep(delta<0);renderAll();let cid=$('classroomClass').value;if(cid)showClassroomIndividuals();}
+function classroomAddPoint(studentId,delta){let s=db.students.find(x=>x.id===studentId);if(!s)return;let actual=delta<0?Math.min(1,s.points):1;if(delta<0&&actual===0)return toast('This student has 0 points.');s.points+=delta<0?-actual:actual;let g=grp(s.groupId);if(g)g.points+=delta<0?-actual:actual;db.transactions.unshift({id:uid('T'),studentId:s.id,points:delta<0?-actual:actual,reason:delta<0?'Classroom: point removed':'Classroom: point added',date:new Date().toLocaleString()});save();quickFeedback(delta<0);renderAll();let cid=$('classroomClass').value;if(cid)showClassroomIndividuals();}
 function enterClassroom(){show('classroom');document.documentElement.requestFullscreen?.().catch(()=>{})}function exitClassroom(){document.exitFullscreen?.().catch(()=>{});show('dashboard')}
-function exportStudents(){let rows=[['Student ID','First Name','Last Name','Class','Group','Points']].concat(db.students.map(s=>[s.id,s.first,s.last,cls(s.classId),grp(s.groupId)?.name||'',s.points]));let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='ClassBoost_Students.csv';a.click()}
-function importFile(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let lines=r.result.split(/\r?\n/).filter(Boolean).map(x=>x.split(',').map(v=>v.replace(/^"|"$/g,'')));let head=lines.shift().map(x=>x.toLowerCase().trim());let added=0;for(let row of lines){let o={};head.forEach((h,i)=>o[h]=row[i]||'');let first=o['first name']||o.firstname||o.name?.split(' ')[0];let last=o['last name']||o.lastname||o.name?.split(' ').slice(1).join(' ')||'';let c=db.classes.find(x=>x.name.toLowerCase()===String(o.class||'').toLowerCase());if(first&&c){db.students.push({id:o['student id']||o.studentid||uid('S'),first,last,classId:c.id,groupId:'',points:0,notes:[]});added++}}save();renderAll();toast('Imported '+added+' students. For XLSX, save the sheet as CSV first if your browser cannot read XLSX.');};r.readAsText(f)}
-$('search').addEventListener('input',renderStudents);renderAll();
+function exportStudents(){let rows=[['Student ID','First Name','Last Name','Class','Group','Points']].concat(db.students.map(s=>[s.id,s.first,s.last,cls(s.classId),grp(s.groupId)?.name||'',s.points]));let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='ClassBoost_Students.csv';a.click()}
+const normH=v=>String(v||'').toLowerCase().replace(/[\u064B-\u065F\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\s_\-.:/()]+/g,'');
+const ALIAS={id:['studentid','id','sid','idnumber','studentno','studentnumber','code','رقمالطالب','الرقم','رقم','رقمالهويه','الرقمالمدني'],first:['firstname','first','givenname','forename','الاسمالاول','اسمالاول'],last:['lastname','last','surname','familyname','family','اسمالعائله','العائله','اللقب'],name:['name','fullname','studentname','student','اسمالطالب','اسمالطالبه','الاسم','اسم','الاسمالكامل'],cls:['class','classname','grade','section','classroom','الصف','الفصل','الشعبه'],grp:['group','groupname','team','المجموعه','مجموعه','الفريق']};
+Object.keys(ALIAS).forEach(k=>ALIAS[k]=ALIAS[k].map(normH));
+function detectHeaders(row){const m={id:-1,first:-1,last:-1,name:-1,cls:-1,grp:-1};row.forEach((cell,i)=>{const k=normH(cell);if(!k)return;for(const f in ALIAS){if(m[f]<0&&ALIAS[f].includes(k)){m[f]=i;break}}});return(m.first>=0||m.last>=0||m.name>=0)?m:null}
+function parseCSV(text){const first=text.split(/\r?\n/,1)[0]||'';const d=[',',';','\t'].map(c=>[c,first.split(c).length]).sort((a,b)=>b[1]-a[1])[0][0];const rows=[];let row=[],cur='',q=false;for(let i=0;i<text.length;i++){const ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}else if(ch==='"')q=true;else if(ch===d){row.push(cur);cur=''}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=ch}if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows}
+function readSheetRows(f){return new Promise((res,rej)=>{const ext=f.name.split('.').pop().toLowerCase(),r=new FileReader();r.onerror=()=>rej(new Error('Could not read the file.'));
+  if(['csv','tsv','txt'].includes(ext)){r.onload=()=>res(parseCSV(String(r.result).replace(/^\uFEFF/,'')));r.readAsText(f,'utf-8')}
+  else{if(!window.XLSX)return rej(new Error('The Excel reader could not load (check your internet connection). Save the sheet as CSV and import that instead.'));
+    r.onload=()=>{try{const wb=XLSX.read(new Uint8Array(r.result),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];res(XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false}))}catch(e){rej(new Error('This does not look like a valid Excel file.'))}};r.readAsArrayBuffer(f)}})}
+function openImport(){fillSelects();$('importClass').innerHTML='<option value="">— No default class —</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');$('importFile').value='';$('importResult').textContent='';$('importModal').classList.add('open')}
+function downloadTemplate(){const csv='\uFEFFStudent ID,First Name,Last Name,Class,Group\n1001,Ahmed,Al Balushi,Grade 10A,Falcons\n1002,Fatma,Al Harthy,Grade 10A,Eagles\n';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='ClassBoost_Import_Template.csv';a.click()}
+async function runImport(){
+  const f=$('importFile').files[0];if(!f)return toast('Choose a file first.');
+  let rows;try{rows=await readSheetRows(f)}catch(e){$('importResult').textContent='⚠️ '+e.message;return}
+  rows=rows.map(r=>r.map(v=>String(v??'').trim())).filter(r=>r.some(v=>v!==''));
+  if(!rows.length){$('importResult').textContent='⚠️ The file is empty.';return}
+  let map={id:-1,first:-1,last:-1,name:-1,cls:-1,grp:-1},hi=-1;
+  for(let r=0;r<Math.min(rows.length,5)&&hi<0;r++){const m=detectHeaders(rows[r]);if(m){map=m;hi=r}}
+  let data;if(hi<0){map.name=0;data=rows}else data=rows.slice(hi+1);
+  const defC=$('importClass').value,st={added:0,dups:0,noClass:0,noName:0,newClasses:0,newGroups:0,groupFull:0};
+  for(const r of data){
+    let first=map.first>=0?(r[map.first]||''):'',last=map.last>=0?(r[map.last]||''):'';
+    if(!first&&!last&&map.name>=0){const p=(r[map.name]||'').split(/\s+/).filter(Boolean);first=p[0]||'';last=p.slice(1).join(' ')}
+    if(!first&&last){first=last;last=''}
+    if(!first){st.noName++;continue}
+    let classId=defC;const cn=map.cls>=0?(r[map.cls]||''):'';
+    if(cn){let c=db.classes.find(x=>x.name.trim().toLowerCase()===cn.toLowerCase());if(!c){c={id:uid('C'),name:cn,grade:''};db.classes.push(c);st.newClasses++}classId=c.id}
+    if(!classId){st.noClass++;continue}
+    let groupId='';const gn=map.grp>=0?(r[map.grp]||''):'';
+    if(gn){let g=db.groups.find(x=>x.classId===classId&&x.name.trim().toLowerCase()===gn.toLowerCase());if(!g){if(db.groups.filter(x=>x.classId===classId).length>=10)st.groupFull++;else{g={id:uid('G'),name:gn,classId,icon:'⭐',points:0};db.groups.push(g);st.newGroups++}}if(g)groupId=g.id}
+    const id=map.id>=0?(r[map.id]||''):'',full=(first+' '+last).trim().toLowerCase();
+    if((id&&db.students.some(s=>s.id===id))||db.students.some(s=>s.classId===classId&&name(s).trim().toLowerCase()===full)){st.dups++;continue}
+    db.students.push({id:id||uid('S'),first,last,classId,groupId,points:0,notes:[]});st.added++}
+  save();renderAll();
+  let msg=`✅ Imported ${st.added} students.`;
+  if(st.newClasses)msg+=` ${st.newClasses} new class(es) created.`;
+  if(st.newGroups)msg+=` ${st.newGroups} new group(s) created.`;
+  if(st.dups)msg+=` Skipped ${st.dups} duplicate(s).`;
+  if(st.noClass)msg+=` ${st.noClass} row(s) skipped: no class (choose a default class).`;
+  if(st.groupFull)msg+=` ${st.groupFull} row(s) not grouped: class already has 10 groups.`;
+  if(st.noName)msg+=` ${st.noName} row(s) skipped: no name.`;
+  $('importResult').textContent=msg;toast('Imported '+st.added+' students.')}
+$('search').addEventListener('input',renderStudents);updSoundBtn();window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#s='))location.reload()});if(!openPortal())renderAll();
 </script></body></html>
