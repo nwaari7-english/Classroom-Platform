@@ -12,7 +12,23 @@
 <section id="dashboard" class="view active"><div class="grid four"><div class="card"><span class="muted">Classes</span><div class="kpi" id="kClasses">0</div></div><div class="card"><span class="muted">Students</span><div class="kpi" id="kStudents">0</div></div><div class="card"><span class="muted">Recognition Points</span><div class="kpi" id="kPoints">0 ⭐</div></div><div class="card"><span class="muted">Groups</span><div class="kpi" id="kGroups">0</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><div class="row"><h2>Quick Actions</h2><div class="pill">Teacher only</div></div><div class="actions"><button class="btn primary" onclick="openModal('studentModal')">+ Student</button><button class="btn" onclick="openModal('classModal')">+ Class</button><button class="btn" onclick="openGroupReward()">⭐ Group Reward</button><button class="btn" onclick="openRecognition()">⭐ Give Points</button></div></div><div class="card"><h2>Recent Recognition</h2><div id="recent" class="list"></div></div></div></section>
 <section id="classes" class="view"><div class="row"><h2>Classes</h2><button class="btn primary" onclick="openModal('classModal')">+ Add Class</button></div><div id="classList" class="grid three" style="margin-top:16px"></div></section>
 <section id="students" class="view"><div class="row"><h2>Students</h2><div class="actions"><button class="btn" onclick="document.getElementById('csvInput').click()">📥 Import Excel/CSV</button><button class="btn" onclick="exportStudents()">📤 Export</button><button class="btn primary" onclick="openModal('studentModal')">+ Add Student</button></div></div><input id="csvInput" type="file" accept=".csv,.xlsx,.xls" hidden onchange="importFile(event)"><div id="studentList" class="list" style="margin-top:16px"></div></section>
-<section id="groups" class="view"><div class="row"><h2>Group Recognition</h2><div class="actions"><button class="btn" onclick="openGroupReward()">⭐ Reward Group</button><button class="btn primary" onclick="openModal('groupModal')">+ Add Group</button></div></div><div id="groupList" class="grid three" style="margin-top:16px"></div></section>
+<section id="groups" class="view"><div class="row"><h2>Group Recognition</h2><div class="actions"><button class="btn" onclick="openGroupReward()">⭐ Reward Group</button></div></div><div id="groupClassFilterPanel" class="card" style="margin-top:16px;display:none">
+<div class="row">
+<div>
+<h3 style="margin:0">🏫 Select Class</h3>
+<div class="muted">Only groups from the selected class will be displayed. Maximum 10 groups.</div>
+</div>
+<button class="btn" onclick="clearGroupClassFilter()">Show All Groups</button>
+</div>
+<div class="field" style="margin-top:14px;margin-bottom:0">
+<label>Class</label>
+<select id="groupPageClass" onchange="filterGroupPageByClass()">
+<option value="">Select class first</option>
+</select>
+</div>
+</div>
+
+<div id="groupList" class="grid three" style="margin-top:16px"></div></section>
 <section id="recognition" class="view"><div class="row"><h2>Recognition History</h2><button class="btn primary" onclick="openRecognition()">⭐ Give / Remove Points</button></div><div id="recognitionList" class="list" style="margin-top:16px"></div></section>
 <section id="picker" class="view">
 <div class="row"><div><h2>🎯 Student Picker</h2><div class="muted">Randomly choose a student for questions, activities or classroom tasks.</div></div>
@@ -242,6 +258,36 @@ function deleteClass(id){if(!confirm('Delete this class and its groups? Students
 function renderStudents(){let q=($('search').value||'').toLowerCase();let a=db.students.filter(s=>(name(s)+' '+cls(s.classId)).toLowerCase().includes(q));$('studentList').innerHTML=a.map(s=>`<div class="item row"><div><b>${name(s)}</b><div class="muted">${cls(s.classId)} · ${grp(s.groupId)?.name||'No group'} · ID: ${s.id}</div></div><div class="actions"><b>${s.points} ⭐</b><button class="btn" onclick="openStudent('${s.id}')">View</button><button class="btn danger" onclick="deleteStudent('${s.id}')">Delete</button></div></div>`).join('')||'<div class="empty">No students yet.</div>'}
 function deleteStudent(id){if(!confirm('Delete this student?'))return;db.students=db.students.filter(s=>s.id!==id);db.transactions=db.transactions.filter(t=>t.studentId!==id);db.quizzes.forEach(q=>q.scores=q.scores.filter(x=>x.studentId!==id));save();renderAll()}
 function openStudent(id){let s=db.students.find(x=>x.id===id);alert(`${name(s)}\n\nClass: ${cls(s.classId)}\nGroup: ${grp(s.groupId)?.name||'No group'}\nRecognition: ${s.points} points\nQuiz results: ${db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===id).map(x=>q.name+': '+x.score+'/'+q.total+' ('+x.pct+'%)')).join('\n')||'None'}\n\nParent note: ${s.notes?.[0]||'None'}`)}
+
+function openGroupClassSelector(){
+  let select = $('groupPageClass');
+
+  select.innerHTML =
+    '<option value="">Select class first</option>' +
+    db.classes.map(c =>
+      `<option value="${c.id}">${c.name}</option>`
+    ).join('');
+
+  $('groupClassFilterPanel').style.display = 'block';
+}
+
+function filterGroupPageByClass(){
+  let classId = $('groupPageClass').value;
+
+  if(!classId){
+    renderGroups();
+    return;
+  }
+
+  renderGroups(classId);
+}
+
+function clearGroupClassFilter(){
+  $('groupPageClass').value = '';
+  $('groupClassFilterPanel').style.display = 'none';
+  renderGroups();
+}
+
 function renderGroups(){$('groupList').innerHTML=db.groups.slice().sort((a,b)=>b.points-a.points).map((g,i)=>`<div class="card"><div class="row"><span style="font-size:34px">${g.icon||'⭐'}</span><span class="pill">#${i+1}</span></div><h2>${g.name}</h2><div class="muted">${cls(g.classId)} · ${db.students.filter(s=>s.groupId===g.id).length} members</div><div class="kpi">${g.points} ⭐</div><div class="actions"><button class="btn primary" onclick="groupPoints('${g.id}')">+ Group Points</button><button class="btn danger" onclick="deleteGroup('${g.id}')">Delete</button></div></div>`).join('')||'<div class="empty">No groups yet.</div>'}
 function openGroupReward(){
   fillGroupRewardSelects();
