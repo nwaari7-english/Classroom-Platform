@@ -54,7 +54,7 @@
 <section id="quizzes" class="view"><div class="row"><h2>Paper Quiz Records</h2><button class="btn primary" onclick="openQuiz()">+ Record Quiz</button></div><div class="card" style="margin-top:16px"><div class="muted">Quiz results are teacher-only and are never shown in Classroom Mode.</div><div id="quizList" class="list" style="margin-top:12px"></div></div></section>
 <section id="notes" class="view"><div class="row"><h2>Parent-Visible Teacher Notes</h2><select id="noteStudent" onchange="renderNote()" style="padding:10px;border:1px solid var(--line);border-radius:10px"></select></div><div id="notePanel" class="card" style="margin-top:16px"></div></section>
 <section id="analytics" class="view"><h2>Teacher Analytics</h2><div class="grid three"><div class="card"><span class="muted">Quiz Average</span><div class="kpi" id="aAvg">0%</div></div><div class="card"><span class="muted">Highest Recorded</span><div class="kpi" id="aHigh">0%</div></div><div class="card"><span class="muted">Attention Indicators</span><div class="kpi" id="aAttention">0</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>Quiz Performance</h3><div id="quizChart"></div></div><div class="card"><h3>Group Points</h3><div id="groupChart"></div></div></div></section>
-<section id="cards" class="view"><div class="row noPrint"><h2>Student ID Cards</h2><div class="actions"><select id="cardsClass" onchange="renderCards()" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">All Classes</option></select><button class="btn primary" onclick="printCards()">🖨️ Export / Print PDF</button></div></div><div class="note noPrint" style="margin:15px 0"><label style="display:flex;gap:9px;align-items:flex-start;font-weight:700"><input id="qrResults" type="checkbox" checked onchange="renderCards()" style="margin-top:3px"><span>🔒 Show each student's private results inside their own QR code<br><span class="muted" style="font-weight:400">Scanning a card opens a private page with <b>only that student's</b> points, quiz scores and parent note. Other students' data is never included. Untick to make the QR show name/class only.</span></span></label></div><div id="cardsPreview" class="idcards"></div></section>
+<section id="cards" class="view"><div class="row noPrint"><h2>Student ID Cards</h2><div class="actions"><select id="cardsClass" onchange="renderCards()" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">All Classes</option></select><button class="btn" onclick="openCloud()">☁️ Portal Sync</button><button class="btn primary" onclick="printCards()">🖨️ Export / Print PDF</button></div></div><div class="note noPrint" style="margin:15px 0"><label style="display:flex;gap:9px;align-items:flex-start;font-weight:700"><input id="qrResults" type="checkbox" checked onchange="renderCards();schedulePublish()" style="margin-top:3px"><span>🔒 Show each student's private results inside their own QR code<br><span class="muted" style="font-weight:400">Scanning a card opens a private page with <b>only that student's</b> points, quiz scores and parent note — always up to date, with no need to reprint. Other students' data is never included. Untick to hide results from the portal.</span></span></label></div><div id="cardsPreview" class="idcards"></div></section>
 <section id="classroom" class="view"><div class="classroom"><div class="row"><div><h2 style="margin:0">🖥️ Classroom Mode</h2><div style="color:#aeb7cf">Safe projection view — no quiz scores, grades, analytics or other private student data.</div></div><button class="btn" onclick="exitClassroom()">Exit Classroom Mode</button></div><div class="actions" style="margin:18px 0;align-items:center"><select id="classroomClass" onchange="renderClassroom()" style="padding:11px;border-radius:10px"><option value="">All Classes</option></select><button class="btn primary" id="classroomIndividualsBtn" onclick="showClassroomIndividuals()">👤 Show Individuals</button><button class="btn" id="classroomGroupsBtn" onclick="showClassroomGroups()">👥 Show Groups</button></div><div id="classroomGroupsPanel" class="card"><h3>👥 Group Leaderboard</h3><div id="classroomGroups" class="leaders"></div></div><div id="classroomIndividualsPanel" class="card" style="margin-top:16px;display:none"><div class="row"><div><h3 style="margin:0">⭐ Individual Students</h3><div id="classroomIndividualSubtitle" class="muted"></div></div></div><div id="classroomStudents" class="studentgrid" style="margin-top:14px"></div></div><div class="card" style="margin-top:16px"><h3>🎯 Class Goal</h3><div id="classGoal" class="kpi">0 / 500 ⭐</div><div class="bar"><span id="goalBar" style="width:0"></span></div></div></div></section>
 </main></div>
 <div class="modal" id="classModal"><div class="modalbox"><div class="modalhead"><h2>🏫 Add Class</h2><button class="close" onclick="closeModal('classModal')">×</button></div><div class="field"><label>Class Name</label><input id="className" placeholder="Grade 10A"></div><div class="field"><label>Grade / Level</label><input id="classGrade" placeholder="Grade 10"></div><div class="actions"><button class="btn" onclick="closeModal('classModal')">Cancel</button><button class="btn primary" onclick="addClass()">Create</button></div></div></div>
@@ -77,15 +77,31 @@
 <div class="field"><label>File</label><input id="importFile" type="file" accept=".csv,.tsv,.txt,.xlsx,.xls"></div>
 <div id="importResult" class="muted" style="margin-bottom:12px"></div>
 <div class="actions"><button class="btn" onclick="downloadTemplate()">⬇️ Template</button><button class="btn" onclick="closeModal('importModal')">Close</button><button class="btn primary" onclick="runImport()">Import</button></div></div></div>
+<div class="modal" id="membersModal"><div class="modalbox"><div class="modalhead"><h2 id="membersTitle">Group Members</h2><button class="close" onclick="closeModal('membersModal')">×</button></div>
+<input type="hidden" id="membersGroupId">
+<div class="note" style="margin-bottom:12px">Tick the students who belong to this group. A student already in another group will be moved to this one.</div>
+<input id="membersSearch" placeholder="Search students..." oninput="renderMembersList()" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px">
+<div id="membersList" style="max-height:340px;overflow:auto;margin-bottom:14px"></div>
+<div class="actions"><button class="btn" onclick="closeModal('membersModal')">Cancel</button><button class="btn primary" onclick="saveMembers()">Save Members</button></div></div></div>
+<div class="modal" id="cloudModal"><div class="modalbox"><div class="modalhead"><h2>☁️ Portal Sync</h2><button class="close" onclick="closeModal('cloudModal')">×</button></div>
+<div id="cloudSetupNote" class="note" style="margin-bottom:12px"></div>
+<div id="cloudLogin"><div class="field"><label>Teacher email</label><input id="cloudEmail" type="email" autocomplete="username"></div><div class="field"><label>Password</label><input id="cloudPass" type="password" autocomplete="current-password"></div><button class="btn primary" onclick="cloudLoginClick()">Sign in</button></div>
+<div id="cloudSigned" style="display:none"><b id="cloudWho"></b></div>
+<label style="display:flex;gap:8px;margin:14px 0;align-items:flex-start"><input type="checkbox" id="cloudLegacy" onchange="toggleLegacy()" style="margin-top:3px"><span><b>Also support cards already printed (old QR)</b><br><span class="muted" style="font-size:12px">Lets the first batch of printed cards show live results too. Turn it off after you reprint the new cards, because old cards identify the student by ID only.</span></span></label>
+<div id="cloudStatus" class="muted" style="margin:10px 0"></div>
+<div class="actions"><button class="btn" onclick="cloudSignOut()">Sign out</button><button class="btn primary" onclick="publishAll(true)">Publish all now</button></div></div></div>
 <canvas id="fx"></canvas>
 <div class="celebrate" id="celebrate"><div class="celebratebox"><div id="celebrateEmoji" class="big">🎉</div><h2 id="celebrateTitle">Excellent!</h2><div id="celebrateText">+5 POINTS</div><button class="btn primary" style="margin-top:18px" onclick="hideCelebrate()">Continue</button></div></div><div id="toast" style="position:fixed;right:20px;bottom:20px;background:#182230;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:70"></div>
 <div id="portal"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const KEY='classboost_clean_v1';
+/* ===== Live Student Portal (Firebase) — fill these 2 values after the one-time setup ===== */
+const PORTAL_CFG={apiKey:'AIzaSyANogxPC-WqyIscwqPVoVduAOeTUi3BljU',projectId:'classboost-e1234'};
+/* ======================================================================================== */
 let db=(()=>{try{let d=JSON.parse(localStorage.getItem(KEY));return d&&Array.isArray(d.classes)?d:{classes:[],groups:[],students:[],transactions:[],quizzes:[]}}catch(e){return{classes:[],groups:[],students:[],transactions:[],quizzes:[]}}})();
 const $=id=>document.getElementById(id); const uid=p=>p+Math.random().toString(36).slice(2,9); const cls=id=>db.classes.find(x=>x.id===id)?.name||'—'; const grp=id=>db.groups.find(x=>x.id===id); const name=s=>(s?.first||'')+' '+(s?.last||'');
-function save(){localStorage.setItem(KEY,JSON.stringify(db))} function toast(m){let t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));schedulePublish()} function toast(m){let t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
 function show(view){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(view).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('pageTitle').textContent=view==='classroom'?'Classroom Mode':view.charAt(0).toUpperCase()+view.slice(1);renderAll()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
 function openModal(id){fillSelects();$(id).classList.add('open')} function closeModal(id){$(id).classList.remove('open')}
@@ -253,6 +269,11 @@ function renderStudents(){let q=($('search').value||'').toLowerCase();let a=db.s
 function deleteStudent(id){if(!confirm('Delete this student?'))return;db.students=db.students.filter(s=>s.id!==id);db.transactions=db.transactions.filter(t=>t.studentId!==id);db.quizzes.forEach(q=>q.scores=q.scores.filter(x=>x.studentId!==id));save();renderAll()}
 function openStudent(id){let s=db.students.find(x=>x.id===id);alert(`${name(s)}\n\nClass: ${cls(s.classId)}\nGroup: ${grp(s.groupId)?.name||'No group'}\nRecognition: ${s.points} points\nQuiz results: ${db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===id).map(x=>q.name+': '+x.score+'/'+q.total+' ('+x.pct+'%)')).join('\n')||'None'}\n\nParent note: ${s.notes?.[0]||'None'}`)}
 
+let membersSel=new Set();
+function openMembers(gid){const g=grp(gid);if(!g)return;$('membersGroupId').value=gid;$('membersTitle').textContent='👥 '+g.name+' — Members';membersSel=new Set(db.students.filter(s=>s.groupId===gid).map(s=>s.id));$('membersSearch').value='';renderMembersList();$('membersModal').classList.add('open')}
+function renderMembersList(){const g=grp($('membersGroupId').value);if(!g)return;const q=$('membersSearch').value.trim().toLowerCase();const list=db.students.filter(s=>s.classId===g.classId&&(!q||name(s).toLowerCase().includes(q)));$('membersList').innerHTML=list.map(s=>{const o=s.groupId&&s.groupId!==g.id?grp(s.groupId):null;return `<label class="prow" style="cursor:pointer"><span><input type="checkbox" data-id="${esc(s.id)}" ${membersSel.has(s.id)?'checked':''} onchange="toggleMember(this.dataset.id,this.checked)"> ${esc(name(s))}</span><span class="muted">${o?'in '+esc(o.name):''}</span></label>`}).join('')||'<div class="empty">No students in this class yet. Add or import students first.</div>'}
+function toggleMember(id,on){on?membersSel.add(id):membersSel.delete(id)}
+function saveMembers(){const gid=$('membersGroupId').value,g=grp(gid);if(!g)return;db.students.forEach(s=>{if(s.classId!==g.classId)return;if(membersSel.has(s.id))s.groupId=gid;else if(s.groupId===gid)s.groupId=''});save();closeModal('membersModal');renderAll();toast('✅ Members updated ('+membersSel.size+')')}
 function filterGroupPageByClass(){renderGroups()}
 function openAddGroup(){fillSelects();const c=$('groupPageClass').value;if(c)$('groupClass').value=c;$('groupName').value='';$('groupModal').classList.add('open')}
 function renderGroups(){
@@ -263,7 +284,7 @@ function renderGroups(){
   if(!cid){$('groupCount').textContent='0 / 10 groups';$('groupList').innerHTML='<div class="empty" style="grid-column:1/-1">🏫 Choose a class above to see its groups.</div>';return}
   const gs=db.groups.filter(g=>g.classId===cid).sort((a,b)=>b.points-a.points);
   $('groupCount').textContent=gs.length+' / 10 groups';
-  $('groupList').innerHTML=gs.map((g,i)=>{const m=db.students.filter(s=>s.groupId===g.id);return `<div class="card"><div class="row"><span style="font-size:34px">${g.icon||'⭐'}</span><span class="pill">#${i+1}</span></div><h2>${g.name}</h2><div class="muted">${m.length} members${m.length?': '+m.slice(0,4).map(s=>s.first).join(', ')+(m.length>4?'…':''):''}</div><div class="kpi">${g.points} ⭐</div><div class="actions" style="margin-top:10px"><button class="btn primary" onclick="openGroupReward('${g.id}','award')">＋ Add Points</button><button class="btn danger" onclick="openGroupReward('${g.id}','remove')">－ Remove Points</button><button class="btn" title="Delete group" onclick="deleteGroup('${g.id}')">🗑</button></div></div>`}).join('')||'<div class="empty" style="grid-column:1/-1">No groups in this class yet. Click “+ Add Group”.</div>'}
+  $('groupList').innerHTML=gs.map((g,i)=>{const m=db.students.filter(s=>s.groupId===g.id);return `<div class="card"><div class="row"><span style="font-size:34px">${g.icon||'⭐'}</span><span class="pill">#${i+1}</span></div><h2>${g.name}</h2><div class="muted">${m.length} members${m.length?': '+m.slice(0,4).map(s=>s.first).join(', ')+(m.length>4?'…':''):''}</div><div class="kpi">${g.points} ⭐</div><div class="actions" style="margin-top:10px"><button class="btn primary" onclick="openGroupReward('${g.id}','award')">＋ Add Points</button><button class="btn danger" onclick="openGroupReward('${g.id}','remove')">－ Remove Points</button><button class="btn" onclick="openMembers('${g.id}')">👥 Members</button><button class="btn" title="Delete group" onclick="deleteGroup('${g.id}')">🗑</button></div></div>`}).join('')||'<div class="empty" style="grid-column:1/-1">No groups in this class yet. Click “+ Add Group”.</div>'}
 function openGroupReward(groupId,action){
   $('groupRewardClass').innerHTML='<option value="">Select class first</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   $('groupRewardGroup').innerHTML='<option value="">Select a class first</option>';
@@ -296,7 +317,6 @@ function applyGroupReward(){
   const g=grp(groupId);
   if(!g||g.classId!==classId)return toast('Invalid group for selected class.');
   const students=db.students.filter(s=>s.classId===classId&&s.groupId===groupId);
-  if(!students.length)return toast('This group has no students.');
   if(studentId){
     const s=students.find(x=>x.id===studentId);if(!s)return toast('Invalid student.');
     const actual=remove?Math.min(points,s.points):points;
@@ -324,31 +344,104 @@ function studentPayload(s,withResults){
     o.p=s.points;
     o.q=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>[cutS(q.name,24),x.score,q.total,x.pct,q.date])).slice(-8);
     o.t=db.transactions.filter(t=>t.studentId===s.id).slice(0,5).map(t=>[t.points,cutS(t.reason,40),String(t.date).split(',')[0]]);
-    o.note=cutS(s.notes?.[0],200);o.d=new Date().toLocaleDateString();
+    o.note=cutS(s.notes?.[0],200);o.d=new Date().toLocaleDateString();if(grp(s.groupId))o.gp=grp(s.groupId).points;
   }
   return o}
 function renderCards(){
   const sel=$('cardsClass'),old=sel.value;
   sel.innerHTML='<option value="">All Classes</option>'+db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   sel.value=db.classes.some(c=>c.id===old)?old:'';
-  const withRes=$('qrResults').checked,base=location.href.split('#')[0];
+  const withRes=$('qrResults').checked,base=location.href.split('#')[0],live=cloudReady();
+  if(live&&db.students.map(ensureToken).some(Boolean))localStorage.setItem(KEY,JSON.stringify(db));
   const list=db.students.filter(s=>!sel.value||s.classId===sel.value);
-  $('cardsPreview').innerHTML=list.map(s=>{const url=base+'#s='+enc(studentPayload(s,withRes));return `<div class="idcard card"><div class="muted">🚀 ClassBoost · Student ID</div><h2>${esc(name(s))}</h2><div>${esc(cls(s.classId))} · ${esc(grp(s.groupId)?.name||'No group')}</div><img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=L&margin=4&data=${encodeURIComponent(url)}" alt="Student QR"><div class="muted">Student ID: <b>${esc(s.id)}</b></div><small>🔒 Scan to see <b>your own</b> results only</small><div style="margin-top:8px;font-size:11px"><b>T. Anwaar Al Farsi</b></div></div>`}).join('')||'<div class="empty">Add students to generate ID cards.</div>'}
-function printCards(){if(!db.students.length)return toast('Add students first.');show('cards');setTimeout(()=>{const imgs=[...document.querySelectorAll('#cardsPreview img')];const wait=Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r})));Promise.race([wait,new Promise(r=>setTimeout(r,6000))]).then(()=>window.print())},200)}
-function openPortal(){
-  const m=location.hash.match(/^#s=([^&]+)/);if(!m)return false;
-  let o;try{o=dec(m[1])}catch(e){return false}
-  if(!o||!o.n)return false;
-  document.querySelector('.app').style.display='none';
+  $('cardsPreview').innerHTML=list.map(s=>{const url=live?base+'#p='+s.token:base+'#s='+enc(studentPayload(s,withRes));return `<div class="idcard card"><div class="muted">🚀 ClassBoost · Student ID</div><h2>${esc(name(s))}</h2><div>${esc(cls(s.classId))} · ${esc(grp(s.groupId)?.name||'No group')}</div><img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=L&margin=4&data=${encodeURIComponent(url)}" alt="Student QR"><div class="muted">Student ID: <b>${esc(s.id)}</b></div><small>🔒 Scan to see <b>your own</b> results only</small><div style="margin-top:8px;font-size:11px"><b>T. Anwaar Al Farsi</b></div></div>`}).join('')||'<div class="empty">Add students to generate ID cards.</div>'}
+async function printCards(){
+  if(!db.students.length)return toast('Add students first.');
+  if(!cloudReady()){if(!confirm('Live portal is not set up. The QR codes will be a one-time snapshot (results will NOT update after printing). Continue?'))return}
+  else{if(!cloudAuth.refresh){toast('Sign in to Portal Sync first.');openCloud();return}
+    toast('Publishing student data…');await publishAll(true);if(($('cloudStatus')?.textContent||'').startsWith('⚠️')){if(!confirm('Publishing failed. Cards printed now may not work until sync succeeds. Continue anyway?'))return}}
+  show('cards');setTimeout(()=>{const imgs=[...document.querySelectorAll('#cardsPreview img')];const wait=Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r})));Promise.race([wait,new Promise(r=>setTimeout(r,6000))]).then(()=>window.print())},200)}
+
+/* ---------- Live portal (Firebase Firestore via REST) ---------- */
+const FS=()=>`https://firestore.googleapis.com/v1/projects/${PORTAL_CFG.projectId}/databases/(default)/documents`;
+const cloudReady=()=>!!(PORTAL_CFG.apiKey&&PORTAL_CFG.projectId);
+let cloudAuth=(()=>{try{return JSON.parse(localStorage.getItem('cb_auth'))||{}}catch(e){return{}}})(),idTok='',idExp=0,pubTimer=null,pubBusy=false;
+const legacyId=id=>'l_'+String(id).replace(/[^A-Za-z0-9_-]/g,'_');
+function setCloudStatus(t){const e=$('cloudStatus');if(e)e.textContent=t}
+function ensureToken(s){if(s.token)return false;const a=new Uint8Array(14);crypto.getRandomValues(a);s.token=[...a].map(b=>b.toString(36).padStart(2,'0')).join('').slice(0,22);return true}
+async function cloudSignIn(email,pw){
+  const r=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${PORTAL_CFG.apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw,returnSecureToken:true})});
+  const j=await r.json();if(!r.ok)throw new Error((j.error&&j.error.message)||'Sign-in failed');
+  idTok=j.idToken;idExp=Date.now()+(+j.expiresIn-60)*1000;cloudAuth={email,refresh:j.refreshToken};localStorage.setItem('cb_auth',JSON.stringify(cloudAuth))}
+async function cloudToken(){
+  if(idTok&&Date.now()<idExp)return idTok;
+  if(!cloudAuth.refresh)throw new Error('Not signed in to Portal Sync.');
+  const r=await fetch(`https://securetoken.googleapis.com/v1/token?key=${PORTAL_CFG.apiKey}`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(cloudAuth.refresh)});
+  const j=await r.json();if(!r.ok)throw new Error('Session expired — please sign in again.');
+  idTok=j.id_token;idExp=Date.now()+(+j.expires_in-60)*1000;cloudAuth.refresh=j.refresh_token;localStorage.setItem('cb_auth',JSON.stringify(cloudAuth));return idTok}
+function livePayload(s){
+  const o={n:name(s).trim(),i:s.id,c:cls(s.classId),g:grp(s.groupId)?.name||''};
+  if($('qrResults').checked){
+    o.p=s.points;
+    o.q=db.quizzes.flatMap(q=>q.scores.filter(x=>x.studentId===s.id).map(x=>[q.name,x.score,q.total,x.pct,q.date]));
+    o.t=db.transactions.filter(t=>t.studentId===s.id).slice(0,15).map(t=>[t.points,t.reason||'',String(t.date).split(',')[0]]);
+    o.note=s.notes?.[0]||'';
+    const g=grp(s.groupId);
+    if(g){o.gp=g.points;o.gt=db.transactions.filter(t=>t.groupId===g.id).slice(0,8).map(t=>[t.points,t.reason||'',String(t.date).split(',')[0]])}}
+  o.d=new Date().toLocaleString();return o}
+const djb=t=>{let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h};
+function schedulePublish(){if(!cloudReady()||!cloudAuth.refresh)return;clearTimeout(pubTimer);pubTimer=setTimeout(()=>publishAll(false),3000)}
+async function publishAll(force){
+  if(!cloudReady())return;
+  if(pubBusy){schedulePublish();return}
+  pubBusy=true;
+  try{
+    if(db.students.map(ensureToken).some(Boolean))localStorage.setItem(KEY,JSON.stringify(db));
+    const synced=JSON.parse(localStorage.getItem('cb_synced')||'{}'),legacy=localStorage.getItem('cb_legacy')!=='0',writes=[],upd={};
+    const mk=(id,body)=>({update:{name:`projects/${PORTAL_CFG.projectId}/databases/(default)/documents/portal/${id}`,fields:{d:{stringValue:body}}}});
+    db.students.forEach(st=>{const o=livePayload(st),h=djb(JSON.stringify({...o,d:''}))+'|'+legacy;if(!force&&synced[st.id]===h)return;const body=JSON.stringify(o);writes.push(mk(st.token,body));if(legacy)writes.push(mk(legacyId(st.id),body));upd[st.id]=h});
+    if(!writes.length){setCloudStatus('✅ Portal is up to date.');return}
+    const tok=await cloudToken();
+    for(let i=0;i<writes.length;i+=400){const r=await fetch(FS()+':commit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:JSON.stringify({writes:writes.slice(i,i+400)})});if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error((j.error&&j.error.message)||('Server error '+r.status))}}
+    Object.assign(synced,upd);localStorage.setItem('cb_synced',JSON.stringify(synced));
+    setCloudStatus('✅ Published '+Object.keys(upd).length+' student(s) at '+new Date().toLocaleTimeString());
+  }catch(e){setCloudStatus('⚠️ '+e.message)}finally{pubBusy=false}}
+function openCloud(){
+  $('cloudLegacy').checked=localStorage.getItem('cb_legacy')!=='0';
+  const ok=cloudReady();
+  $('cloudSetupNote').innerHTML=ok?'Sign in once with your teacher account. After that, every point, quiz score and note is sent to the student portal automatically, so printed cards always show the latest results.':'⚠️ Live portal is not configured yet. Put your Firebase <b>apiKey</b> and <b>projectId</b> in <code>PORTAL_CFG</code> at the top of the script in the HTML file, then reload.';
+  $('cloudLogin').style.display=ok&&!cloudAuth.refresh?'block':'none';
+  $('cloudSigned').style.display=ok&&cloudAuth.refresh?'block':'none';
+  $('cloudWho').textContent=cloudAuth.email?'✅ Signed in as '+cloudAuth.email:'';
+  setCloudStatus('');$('cloudModal').classList.add('open')}
+async function cloudLoginClick(){try{setCloudStatus('Signing in…');await cloudSignIn($('cloudEmail').value.trim(),$('cloudPass').value);$('cloudPass').value='';openCloud();setCloudStatus('Signed in. Publishing…');await publishAll(true)}catch(e){setCloudStatus('⚠️ '+e.message)}}
+function cloudSignOut(){cloudAuth={};idTok='';localStorage.removeItem('cb_auth');openCloud()}
+function toggleLegacy(){localStorage.setItem('cb_legacy',$('cloudLegacy').checked?'1':'0');publishAll(true)}
+async function fetchPortal(docId){const r=await fetch(`${FS()}/portal/${encodeURIComponent(docId)}?key=${PORTAL_CFG.apiKey}`);if(!r.ok)return null;const j=await r.json();return JSON.parse(j.fields.d.stringValue)}
+function renderPortal(o,msg){
   let h=`<div class="pcard"><div class="muted">🚀 ClassBoost · Student Portal</div><h1>${esc(o.n)}</h1><div class="muted">${esc(o.c)}${o.g?' · '+esc(o.g):''} · ID ${esc(o.i)}</div>`;
   if(o.p===undefined){h+='<div class="note" style="margin-top:16px">Your teacher has not enabled results on this card.</div>'}
   else{
     h+=`<div style="margin-top:18px" class="muted">Recognition points</div><div class="pbig">${esc(o.p)} ⭐</div>`;
+    if(o.gp!==undefined&&o.g){h+=`<div class="note" style="margin-top:14px"><div class="muted">👥 My group: <b>${esc(o.g)}</b></div><div class="pbig" style="font-size:34px">${esc(o.gp)} ⭐</div>`+((o.gt||[]).map(t=>`<div class="prow"><span>${esc(t[1]||'Group recognition')} <span class="muted">· ${esc(t[2])}</span></span><b style="color:${t[0]<0?'var(--bad)':'var(--good)'}">${t[0]>0?'+':''}${esc(t[0])}</b></div>`).join(''))+'</div>'}
     h+='<h3>📝 Quiz results</h3>'+((o.q||[]).map(q=>`<div class="prow"><span>${esc(q[0])} <span class="muted">· ${esc(q[4])}</span></span><b>${esc(q[1])}/${esc(q[2])} (${esc(q[3])}%)</b></div>`).join('')||'<div class="muted">No quiz results yet.</div>');
     h+='<h3>⭐ Recent recognition</h3>'+((o.t||[]).map(t=>`<div class="prow"><span>${esc(t[1]||'Recognition')} <span class="muted">· ${esc(t[2])}</span></span><b style="color:${t[0]<0?'var(--bad)':'var(--good)'}">${t[0]>0?'+':''}${esc(t[0])}</b></div>`).join('')||'<div class="muted">No activity yet.</div>');
-    h+=`<h3>💬 Teacher note</h3><div class="note">${esc(o.note)||'No note yet.'}</div><div class="muted" style="margin-top:12px;font-size:12px">Updated: ${esc(o.d||'')}</div>`}
+    h+=`<h3>💬 Teacher note</h3><div class="note">${esc(o.note)||'No note yet.'}</div><div class="muted" style="margin-top:12px;font-size:12px">Last updated: ${esc(o.d||'')}</div>`}
+  if(msg)h+=`<div class="muted" style="margin-top:10px;font-size:12px">${msg}</div>`;
   h+='<div class="muted" style="margin-top:18px;font-size:12px">🔒 This page shows only your own information.</div><div style="margin-top:6px"><b>T. Anwaar Al Farsi</b></div></div>';
-  $('portal').innerHTML=h;$('portal').style.display='block';document.title='ClassBoost — '+o.n;return true}
+  $('portal').innerHTML=h;$('portal').style.display='block';document.title='ClassBoost — '+o.n}
+function portalMsg(t){$('portal').innerHTML=`<div class="pcard"><h2>🚀 ClassBoost</h2><div class="note">${t}</div><div style="margin-top:14px"><b>T. Anwaar Al Farsi</b></div></div>`;$('portal').style.display='block'}
+function openPortal(){
+  let m=location.hash.match(/^#p=([A-Za-z0-9]+)/);
+  if(m){document.querySelector('.app').style.display='none';portalMsg('Loading your results…');
+    if(!cloudReady()){portalMsg('The portal is not configured yet. Please tell your teacher.');return true}
+    fetchPortal(m[1]).then(o=>o?renderPortal(o):portalMsg('Results are not available yet. Please ask your teacher.')).catch(()=>portalMsg('Could not load results. Check your internet connection and try again.'));return true}
+  m=location.hash.match(/^#s=([^&]+)/);if(!m)return false;
+  let o;try{o=dec(m[1])}catch(e){return false}
+  if(!o||!o.n)return false;
+  document.querySelector('.app').style.display='none';renderPortal(o,cloudReady()?'Checking for the latest results…':'');
+  if(cloudReady()&&o.i)fetchPortal(legacyId(o.i)).then(l=>{if(l&&String(l.i)===String(o.i))renderPortal(l);else renderPortal(o,'Showing results saved when this card was printed.')}).catch(()=>renderPortal(o,'Showing results saved when this card was printed.'));
+  return true}
 function renderClassroom(){let cid=$('classroomClass').value,students=db.students.filter(s=>!cid||s.classId===cid),groups=db.groups.filter(g=>!cid||g.classId===cid).sort((a,b)=>b.points-a.points),mx=Math.max(...groups.map(g=>g.points),1);$('classroomGroups').innerHTML=groups.map((g,i)=>`<div class="leader"><div style="font-size:28px">${i<3?['🥇','🥈','🥉'][i]:g.icon||'⭐'}</div><div><b>${g.name}</b><div class="bar"><span style="width:${g.points/mx*100}%"></span></div></div><div class="points">${g.points} ⭐</div></div>`).join('')||'<div class="empty">Add groups to display the group leaderboard.</div>';$('classroomStudents').innerHTML=students.slice().sort((a,b)=>b.points-a.points).map((s,i)=>`<div class="studenttile"><div class="row"><div><b>${i<3?['🥇 ','🥈 ','🥉 '][i]:''}${name(s)}</b><div style="color:#aeb7cf">${grp(s.groupId)?.icon||''} ${grp(s.groupId)?.name||'No group'}</div></div><div class="points">${s.points} ⭐</div></div><div class="actions" style="margin-top:12px"><button class="btn primary" onclick="classroomAddPoint('${s.id}',1)">+1 ⭐</button><button class="btn danger" onclick="classroomAddPoint('${s.id}',-1)">−1 ⭐</button></div></div>`).join('')||'<div class="empty">No students in this class.</div>';let total=students.reduce((a,s)=>a+s.points,0);$('classGoal').textContent=total+' / 500 ⭐';$('goalBar').style.width=Math.min(100,total/5)+'%';if(cid){$('classroomIndividualsBtn').textContent='👤 Show Individuals';$('classroomGroupsBtn').textContent='👥 Show Groups';}else{$('classroomIndividualsBtn').textContent='👤 Show All Individuals';$('classroomGroupsBtn').textContent='👥 Show Groups';}}
 function showClassroomIndividuals(){let cid=$('classroomClass').value;if(!cid)return toast('Please select a class first.');let c=db.classes.find(x=>x.id===cid);$('classroomIndividualsPanel').style.display='block';$('classroomGroupsPanel').style.display='none';$('classroomIndividualSubtitle').textContent=c?c.name+' · '+db.students.filter(s=>s.classId===cid).length+' students':'';}
 function showClassroomGroups(){$('classroomIndividualsPanel').style.display='none';$('classroomGroupsPanel').style.display='block';}
@@ -397,5 +490,5 @@ async function runImport(){
   if(st.groupFull)msg+=` ${st.groupFull} row(s) not grouped: class already has 10 groups.`;
   if(st.noName)msg+=` ${st.noName} row(s) skipped: no name.`;
   $('importResult').textContent=msg;toast('Imported '+st.added+' students.')}
-$('search').addEventListener('input',renderStudents);updSoundBtn();window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#s='))location.reload()});if(!openPortal())renderAll();
+$('search').addEventListener('input',renderStudents);updSoundBtn();window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#s='))location.reload()});if(!openPortal()){renderAll();schedulePublish()}
 </script></body></html>
